@@ -1,11 +1,11 @@
-[Formatting cheatsheet](https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax) \
+[Formatting cheatsheet](https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax)  
 
-[Mastering Markdown - more cheatsheet stuff](https://guides.github.com/features/mastering-markdown/) \
+[Mastering Markdown - more cheatsheet stuff](https://guides.github.com/features/mastering-markdown/)  
 
-`backticks` \
+`backticks`  
 
-```triple\
-backticks``` \
+```triple  
+backticks```  
 # [Linux Bible](https://justtakingsomenotes.github.io/mynotes/linuxbible.md)
 ## B
 ### C
