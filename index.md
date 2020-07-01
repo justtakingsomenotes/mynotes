@@ -4,9 +4,7 @@
 
 `backticks`  
 
-```triple
-</br>
-backticks```  
+Use double space for newline  
 
 # [Linux Bible](https://justtakingsomenotes.github.io/mynotes/linuxbible.md)
 ## B
