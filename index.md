@@ -4,7 +4,8 @@
 
 `backticks`  
 
-```triple  
+```triple
+</br>
 backticks```  
 
 # [Linux Bible](https://justtakingsomenotes.github.io/mynotes/linuxbible.md)
