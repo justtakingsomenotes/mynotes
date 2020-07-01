@@ -6,6 +6,7 @@
 
 ```triple  
 backticks```  
+
 # [Linux Bible](https://justtakingsomenotes.github.io/mynotes/linuxbible.md)
 ## B
 ### C
