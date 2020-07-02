@@ -12,7 +12,7 @@ Root stuff with `su` in fedora until the Bible explains how to enable
 `sudo snap install [command]` for Ubuntu and `dnf install [command]` for  
 fedora.
 
-## Ch 3
+## Ch 3 Using the Shell
 
 Long command that doesn't fit in one line? Use a backslash and hit enter.  
 This will not execute what you already typed in the terminal but let you  
@@ -20,7 +20,7 @@ continue in a new line with a secondary prompt called PS2.
 `find /home/an/extraordinarily/long/path/ -type f -iname '*.jpg*' \`  
 `>&& continue command here`  
     
-CTRL+ALT+F1-F6: switch between consoles  
+`CTRL+ALT+F1-F6` switch between consoles  
   
 who am i / whoami: display username  
   
@@ -203,7 +203,7 @@ what you see by typing `q`.
 standard output. Also works with only one file the content of which will be  
 printed out on the screen.  
 
-` ; ` sequential commands, use spaces before and after ;  
+` ; ` sequential commands, use spaces before and after: `[space];[space]`  
   
 `&` use the ampersand (&) to run commands in the background, example:  
 `troff -me verylargedocument | lpr &` Closing the Shell kills the process  
@@ -225,48 +225,95 @@ preceded by a $ sign: `$BASH` the variable is then printed instead of the
 variable name itself  
  
 ### Using Shell Variables
-$SHELL identifies the Shell you are using
-$PS1 defines your Shell prompt
-$MAIL identifies the location of your mailbox
-set: see all variables of the current Shell. Better use: set | more
-A subset of all are environmental variables. They are exported to any new Shells opened from the current Shell. Type env or declare to see environment variables. Better use: env | more
-List of common environment variables on pp. 86-87
-Interesting $RANDOM which shows a random number between 0 and 99999
-Creating and using aliases
-alias commands = shortcuts to any command
-Example: alias p='pwd ; ls -CF' will run the pwd command and then ls -CF when you type the letter p and press enter
-rm -i be prompted for each file removal individually
-type alias as a command to check all aliases that are presently set
-unalias can remove an alias. However, opening a new shell will fetch aliases from a configuration file, so unaliased aliases may be restored by that configuration file
-Configuring your shell
-p. 88 bash configuration files:
-/etc/profile
-/etc/bashrc
-~/.bash_profile good place to add environment variables because, once set, they are inherited by future shells
-~/.bashrc good place to add aliases or user specific prompts (see p. 90). It is read each time you open a new shell
-~/.bash_logout
-source = read and execute commands from arguments provided after 'source' in the current shell environment, example: source $HOME/.bashrc
-$HOME is a replacement for ~
-Setting your prompt
-This is a prompt:
-[martin@localhost ~]$ 
-PS1 to PS4 are the relevant environment variables
-examples on p. 90
-echo $PS1 is isnightful
-e.g. add to .bashrc PS1=[\d \t \u@\h \w] don’t forget to # comment what you did
-PS2 is often set to >
-You get this prompt > if you type something in the command line and end it with \
->
-(However, seems to be a little complicated to use)
-Adding environment variables
-see changes to .bashrc in \~
-Getting information about commands
-echo $PATH shows you all the paths that contain commands
-help | less shows built-in commands
-use -- help with the command
-use man pages with man [command]
-use info pages with info [command] in case of fg there was much more info via info than via man
-There are 8 manual page sections:
+
+`$SHELL` identifies the Shell you are using  
+  
+`$PS1` defines your Shell prompt. Remember the comment on PS2 above?  
+Try `echo $PS2`. It is there PS2 variable which defines that the prompt is a `>`  
+  
+`$MAIL` identifies the location of your mailbox  
+  
+`set` see all variables of the current Shell. Better use: `set | more`  
+  
+A subset of all those variables are ENVIRONMENTAL VARIABLES. They are  
+exported to any new Shells opened from the current Shell. Type `env` or  
+`declare` to see environment variables. Better use: `env | more`  
+  
+A list of common environment variables is on pp. 86-87 of the Linux Bible  
+  
+Interesting: `echo $RANDOM` shows a random number between 0 and 99999  
+  
+### Creating and using aliases
+
+alias commands = shortcuts to any command  
+  
+Example: `alias p='pwd ; ls -CF'` will run the `pwd` command and then `ls -CF`  
+when you type the letter p and press enter  
+  
+`rm -i` be prompted for each file removal individually, always use `-i` when  
+you do not yet feel confident in the Linux terminal  
+  
+type `alias` as a command to check all aliases that are presently set  
+  
+`unalias` can remove an alias. However, opening a new shell will fetch aliases  
+from a configuration file, so unaliased aliases may be restored by that  
+configuration file  
+  
+### Configuring your shell
+
+Check Linux Bible on p. 88 for bash configuration files:  
+`/etc/profile`  
+`/etc/bashrc`  
+`~/.bash_profile` is a  good place to add environment variables because, once  
+set, they are inherited by future shells. Note to self: Flask environmental  
+variables here?  
+`~/.bashrc` a good place to add aliases or user specific prompts, see p. 90 of  
+the Linux Bible. This is read in each time you open a new shell.  
+`~/.bash_logout`  
+`source` What does the `source` command do? Read and execute commands from  
+arguments provided after 'source' in the current shell environment, example:  
+`source $HOME/.bashrc`  
+Why does `source` look familiar to me? Because I created a virtual environment  
+in all the Python tutorials I did and never understood what I'm actually doing.
+  
+`$HOME` is a replacement for `~` which are both shortcuts to your home folder  
+  
+### Setting your prompt
+
+This is a prompt:  
+`[martin@localhost ~]$`  
+   
+PS1 to PS4 are the relevant environment variables, examples on p. 90 of the  
+Linux Bible  
+`echo $PS1` is insightful because you can derive what PS1 must look like in  
+order to create the prompt that you want to have. Ever wondered how all those  
+highly skilled tech tutorial youtubers can have prompts that are better than  
+yours? They changed the PS1 variable.    
+Do not ever forget to comment (octothorpe aka hashtag) out what you  
+find .bashrc (as backup) and also comment what you change.  
+Corey Schafer's PS1 looks probably similar to this:  
+`PS1='\nIt is \e[1;36m\A\e[m. ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] in directory:\n\[\033[01;34m\]\w\[\033[00m\] \n$ '`  
+nixCraft is the source you want consult when it comes to stuff like this.
+
+PS2 is often set to `>`  
+You get this prompt `>` if you type something in the command line and end it  
+with `\`
+
+### Adding environment variables
+
+Just put them at the end and don't forget to comment (octothorpe aka hashtag).  
+Check pp. 91-92 of the Linux Bible. This looks useful for the Flask variables.
+
+### Getting information about commands
+
+`echo $PATH` shows you all the paths that contain commands  
+`help | less` shows built-in commands  
+use `-- help` with the command  
+use man pages with `man [command]`
+use info pages with `info [command]` in case of `fg` there was much more info  
+via `info` than via `man`  
+There are 8 manual page sections:  
+  
 1. user commands
 2. system calls (interesting for programmers)
 3. C library functions (see 2)
@@ -274,57 +321,84 @@ There are 8 manual page sections:
 5. file formats and conventions
 6. games
 7. misc
-8. sys admin tools
-just “man” always gives you section 1
-access specific sections like this man 5 passwd
-access name+summary sections of all man pages typing this man -k passwd (VERY COOL)
-In a man page, press / then you can search the man page for a specific term 
+8. sys admin tools  
+  
+Just `man` always gives you section 1.  
+Access specific sections like this `man 5 passwd`  
+Access name+summary sections of all man pages typing this:  
+`man -k passwd` (VERY COOL)  
+In a man page, press `/` then you can search the man page for a specific term.  
+  
+## Ch 4 Moving around the filesystem
 
-Chapter 4 Moving around the filesystem
-pp. 98-99 common directories
-bin → common linux user commands
-boot → contains the bootable kernel and the boot loader
-dev → devices, e.g. tty* (terminal), fd (floppy disk), hd* or sd* (hard disk), ram*,  cd*
-home → directories for each user, except root who has his “home” directory in /root
-etc → administrative configuration files
-media → standard location for automount devices such as USB drives
-lib → shared libraries needed by /bin and /sbin to boot the system
-mnt → nowadays used to mount local or remote filesystems temporarily. Predecessor of /media
-misc → sometimes used to automount filesystems on request
-proc → contains information about system resources
-opt → directory structure available to store add-on application software
-sbin → daemon processes and administrative commands
-root → home folder of root user. It’s not within /home for security reasons
-tmp → tmp files used by applications
-usr → user documentation, games, graphical files (X11), libraries (lib), other commands, files not needed during the boot processdasdfasdf
-var
-Using basic file system commands
-see table on p. 100, interesting: chmod=change permission of files and directories
-from $HOME directory: cd /../../../usr takes you below ~ on three levels and then from there to /usr
-checking permissions: ls -ld [something]
-drwxrwxr-x. 2 Fedorauser Fedorauser 4096 Dec  8 17:49 Env_Var_Test_Folder_see_bashrc/
-d shows that this is about a directory
-Fedora Group it is standard in Fedora to assign a user to a group named after himself. This is called “user private group scheme”
-chmod 700 test gives me full access (read write execute) to the file/directory and everyone else no access at all
-Using metacharacters and operators pp. 102-105
-File-matching metacharacters
-* matches any number of characters
-? matches any one character
-[…] Matches any one of the characters between the bracktes, which can include a hyphen-separated range of letters
-touch – change file timestamps or create new file if argument does not exist
-[Sat Dec 08 22:13:35 Fedorauser@localhost ~/test]ls [abw]* any file beginning with a, b, w is matched...
-apple  banana  watermelon
-[Sat Dec 08 22:13:46 Fedorauser@localhost ~/test]ls [abw]*[ne]...AND ending with either n or e
-apple watermelon
-This also works with ranges: ls [a-g]*
-File-redirection metacharacters
-| piping standard output of one command to standard input of another, e.g. history | less
-< directs the contents of a file to a command
-> directs the standard output of a command to a file (Warning: overriding whatever is already in the file)
-2> directs standard error (i.e. error messages) to a file
-&> directs both standard output and standard error to the file
->> directs the output of a command to a file, adding the output to the end of the existing file (appendind on a new line)
-<< aka here text or here command. Enables you to type text that can be used as standard input for a command. The text to be used as standard input has to be between a free-to-choose word. Example #1:
+Check directory tree and info on pp. 98-99 for common directories.  
+`bin` common linux user commands
+`boot` contains the bootable kernel and the boot loader
+`dev` devices, e.g. tty* (terminal), fd (floppy disk), hd* or sd* (hard disk),  
+ram*,  cd*  
+`home` directories for each user, except root who has his “home” directory  
+in /root  
+`etc` administrative configuration files  
+`media` standard location for automount devices such as USB drives  
+`lib` shared libraries needed by /bin and /sbin to boot the system  
+`mnt` nowadays used to mount local or remote filesystems temporarily and is  
+the predecessor of `/media`.  
+`misc` sometimes used to automount filesystems on request  
+`proc` contains information about system resources  
+`opt` directory structure available to store add-on application software  
+`sbin` daemon processes and administrative commands  
+`root` home folder of root user. It’s not within `/home` for security reasons  
+`tmp` tmp files used by applications  
+`usr` user documentation, games, graphical files (X11), libraries (lib), other  
+commands, files not needed during the boot process
+`var` used by various applications, meant to contain stuff that changes often  
+such as files on an FTP or web server  
+
+### Using basic file system commands
+
+Google and man pages are your friends: `mkdir`, `touch`, `ls`, `rm`,  
+`cp`, `mv`, and (CAREFUL!) `rm` and `rm -r` for folders with subdirectories,  
+better always use `rm -ir`.  
+  
+See table on p. 100 of Linux Bible, important: `chmod` for changing permissions  
+  
+From $HOME directory: `cd /../../../usr` takes you below `~` on three levels  
+and then from there to `/usr`  
+  
+checking permissions: `ls -ld [something]` gives you  
+`drwxrwxr-x. 2 [user] [group] 4096 Dec  8 17:49 [folder]`  
+`d` at the beginning shows that this is about a directory  
+The fact that a user is in a group with the same name like himself is called  
+“user private group scheme”  
+  
+`chmod 700 [file or directory]` gives me full access (read write execute) to  
+the file/directory and everyone else no access at all  
+  
+### Using metacharacters and operators see pp. 102-105 in Linux Bible  
+  
+File-matching metacharacters, like regular expressions:  
+  
+`*` matches any number of characters  
+`?` matches any one character  
+`[...]` Matches any one of the characters between the brackets, which can  
+include a hyphen-separated range of letters  
+`touch` change file timestamps or create new file if argument does not exist  
+`ls [abw]* any file beginning with a, b, w is matched  
+`ls [abw]*[ne]` see above plus ending with either n or e is also matched  
+This also works with ranges: `ls [a-g]*`
+### File-redirection metacharacters
+`|` piping standard output of one command to standard input of another, e.g.  
+`history | less`  
+`<` directs the contents (not the output) of a file to a command  
+
+`>` directs the standard output of a command to a file (Warning:  
+overriding whatever is already in the file)  
+`2>` directs standard error (i.e. error messages) to a file  
+`&>` directs both standard output and standard error to the file  
+`>>` directs the output of a command to a file, adding the output to the  
+end of the existing file (appending to a new line)  
+# continue formatting here
+'<<` aka here text or here command. Enables you to type text that can be used as standard input for a command. The text to be used as standard input has to be between a free-to-choose word. Example #1:
 mail root aname bname cusername <<thetext Hi this will be the standard input to be passed to the mail command which will send it to the three specified users thetext
 Using brace expansion characters
 Be careful with this!
