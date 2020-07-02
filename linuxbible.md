@@ -258,6 +258,8 @@ type `alias` as a command to check all aliases that are presently set
 `unalias` can remove an alias. However, opening a new shell will fetch aliases  
 from a configuration file, so unaliased aliases may be restored by that  
 configuration file  
+
+Example that could be added in .bashrc: `alias mypass="cat /etc/passwd"`  
   
 ### Configuring your shell
 
@@ -291,7 +293,7 @@ highly skilled tech tutorial youtubers can have prompts that are better than
 yours? They changed the PS1 variable.    
 Do not ever forget to comment (octothorpe aka hashtag) out what you  
 find .bashrc (as backup) and also comment what you change.  
-Corey Schafer's PS1 looks probably similar to this:  
+Corey Schafer's PS1 looks probably similar to this (apart from the debian stuff):  
 `PS1='\nIt is \e[1;36m\A\e[m. ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] in directory:\n\[\033[01;34m\]\w\[\033[00m\] \n$ '`  
 nixCraft is the source you want consult when it comes to stuff like this.
 
@@ -301,8 +303,23 @@ with `\`
 
 ### Adding environment variables
 
-Just put them at the end and don't forget to comment (octothorpe aka hashtag).  
-Check pp. 91-92 of the Linux Bible. This looks useful for the Flask variables.
+Just put them at the end and don't forget to export and comment (octothorpe  
+aka hashtag). Check pp. 91-92 of the Linux Bible. This looks useful for  
+the Flask variables.  
+
+Examples:  
+Assuming I saved my own commands in /getstuff/bin then the following line  
+would make them accessible: `PATH=$PATH:/getstuff/bin ; export PATH`
+  
+The following is bad practise because it would run commands in any current  
+directory: `PATH=$.:$PATH ; export PATH`  
+Don't do the line above but be aware that someone could add a malicious  
+command in your directory.
+  
+Auto time-out after 30 minutes, use seconds: `TMOUT=1800`
+  
+You can basically assign anything to an environment variable that is not  
+yet used: `COOLSHORTCUT=some_folder ; export COOLSHORTCUT`
 
 ### Getting information about commands
 
@@ -385,8 +402,10 @@ include a hyphen-separated range of letters
 `touch` change file timestamps or create new file if argument does not exist  
 `ls [abw]* any file beginning with a, b, w is matched  
 `ls [abw]*[ne]` see above plus ending with either n or e is also matched  
-This also works with ranges: `ls [a-g]*`
-### File-redirection metacharacters
+This also works with ranges: `ls [a-g]*`  
+
+### File-redirection metacharacters  
+
 `|` piping standard output of one command to standard input of another, e.g.  
 `history | less`  
 `<` directs the contents (not the output) of a file to a command  
