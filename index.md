@@ -6,7 +6,7 @@
 
 Use double space for newline  
 
-# [Linux Bible](https://justtakingsomenotes.github.io/mynotes/linuxbible.md)
+# [Linux Bible](https://github.com/justtakingsomenotes/mynotes/blob/master/linuxbible.md)
 ## B
 ### C
 #### D
