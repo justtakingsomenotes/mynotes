@@ -164,7 +164,7 @@ any number you see, say 1, run `fc 1` and the text editor opens and there is
 already the command you saw behind "1" in the text editor.  
   
 Exit `vi` or `vim` by typing `:q!` or type `:wq!` to save file and exit.  
-AFTER CLOSING THE TEXT EDITOR THE COMMANDS YOU SAW ARE EXECCUTED!!!
+AFTER CLOSING THE TEXT EDITOR THE COMMANDS YOU SAW ARE EXECUTED!!!
   
 THESE COMMANDS ARE RUN AFTER CLOSING TEXT EDITOR!!!  
 `fc [number from history command] [other number from history command]` puts  
@@ -275,8 +275,9 @@ the Linux Bible. This is read in each time you open a new shell.
 `source` What does the `source` command do? Read and execute commands from  
 arguments provided after 'source' in the current shell environment, example:  
 `source $HOME/.bashrc`  
-Why does `source` look familiar to me? Because I created a virtual environment  
-in all the Python tutorials I did and never understood what I'm actually doing.
+Why does `source` look familiar to me? Because I created and activated a  
+virtual environment in all the Python tutorials I did and never understood  
+what I'm actually doing: `. venv/bin/activate`
   
 `$HOME` is a replacement for `~` which are both shortcuts to your home folder  
   
@@ -309,12 +310,19 @@ the Flask variables.
 
 Examples:  
 Assuming I saved my own commands in /getstuff/bin then the following line  
-would make them accessible: `PATH=$PATH:/getstuff/bin ; export PATH`
+would make them accessible: `PATH=$PATH:/getstuff/bin ; export PATH`  
+If I now do a `echo $PATH` I would see that `/getstuff/bin` was appended  
+to the end of echo's output.
   
 The following is bad practise because it would run commands in any current  
 directory: `PATH=$.:$PATH ; export PATH`  
 Don't do the line above but be aware that someone could add a malicious  
-command in your directory.
+command in your directory since the dot `.` which is equal to `source`  
+would be prepended to your `$PATH` AND an `export` takes place at the same  
+time which makes the changes effective not only for the commands being called  
+but also in the calling program (bash itself). More on this [here](https://unix.stackexchange.com/a/26067).  
+`echo $PATH` would reveal that the dot is at the beginning of the output.  
+Remember: commands are checked against `$PATH` from left to right.
   
 Auto time-out after 30 minutes, use seconds: `TMOUT=1800`
   
@@ -416,88 +424,124 @@ overriding whatever is already in the file)
 `&>` directs both standard output and standard error to the file  
 `>>` directs the output of a command to a file, adding the output to the  
 end of the existing file (appending to a new line)  
-# continue formatting here
-'<<` aka here text or here command. Enables you to type text that can be used as standard input for a command. The text to be used as standard input has to be between a free-to-choose word. Example #1:
-mail root aname bname cusername <<thetext Hi this will be the standard input to be passed to the mail command which will send it to the three specified users thetext
-Using brace expansion characters
-Be careful with this!
-touch memo{1,2,3} will create three files: memo1, memo2, memo3
-rm -f memo{1,2,3} will remove them; the -f option ignores non-existent files and doesn’t prompt
-This doesn’t work as expected:
-touch memo{1,test,3}
-Also:
-touch {John,Bill,Sally}-{Breakfast,Lunch} will create all combinations with a dash – in between
-One more thing:
-touch {a..f}{1..5} does what you expect 
-rm -i * asks you before removing every file, y for yes n for no
-rm -R deletes subfolders careful with this
-Listing files and directories
-ln creates a hard link by default, option -s creates a soft link
-Example on p. 106: ln [options] [where to point to] [name of the pointer]
-lrwxrwxrwx. 1 Fedorauser Fedorauser    5 Dec 23 22:11 pointer_to_apple -> apple
--rwxr-xr-x. 1 Fedorauser Fedorauser    0 Dec 23 22:06 scriptx.sh
-drwxrwxr-x. 2 Fedorauser Fedorauser 4096 Dec 23 22:06 Stuff
--rw-rw-r--. 1 Fedorauser Fedorauser    0 Dec  8 21:34 watermelon
-number of characters in bytes
-^ the d indicates a directory, lower case L indicates a symbolic link, a hyphen a regular file, the x at the end indicates that it is executable
-When running ls -l there is total XXX in the first line which is the space consumed by the displayed files in kilobytes
-if there is an “s” somewhere in the permission column it means that it can be run by any user. However, ownership does not change. This is called a UID/GID (user/group ID) program.
-If there is a “t” at the end of the permission column it means that there is a “sticky bit” which allows other users or groups to create files but prevents to delete others’ files. A capital T (sticky bit) and S (GID) means that the permission was set without execute permission.
-A plus sign + means that an extended attribute such as SELinux or Access Control Lists (ACLs) have been set
-Show your own home directory using the tilde ~: echo ~
-Show other users’ home using echo ~otheruser
-This also works with root: echo ~root
-This also works when navigating: cd ~someuser/test
-cd takes you to $OLDPWD
-A single dot . is the $PWD
-Two dots .. are the directory above $PWD
-ls -t displays the items in the order in which they were last modified
-ls -F adds markers to the files to be displayed (easier to read)
-ls –hide=PATTERN hides entries according to the pattern, e.g. ls -hide=g* will hide any file beginning with the letter g (this is case sensitive)
-ls -ld some_dir_or_file one_more_file is useless without the -l option. But -ld shows information only for the specified directory/file
-ls -R additionally show subdirectories (careful!)
-ls -S list files by size
-Listing file permissions and ownership
-There are 9 permission bytes, use ls -l to see them and ignore the first character (e.g. d=directory, see designators above):
-drwxr-xr-x.
-List of designators:
-d = directory
-- = file
-l = symbolic link
-b = block device: are addressable in device-specified chunks called blocks and generally support seeking, the random access of data. They are often abbreviated as blkdev. Block devices are accessed via a special file called a block device node and generally mounted as a filesystem. Eg:Hard-disk.
-c = character device: are generally not addressable, providing access to data only as a stream, generally of characters i.e bytes. They are often abbreviated as cdev. They are accessed through a special node in filesystem called as character device node. Eg: Keyboard
-s = socket
-p = named pipe
-drwxr-xr-x
-owner’s permission group assigned to the file all others
-r = read bit; w = write; x = execute; - = nothing is assigned
-Permission
-Applies for files
-Applies for directories
-Read = 4 = r
-View what’s in the file
-View files and subdirectories
-Write = 2 = w
-Change file’s content, rename it, delete it
-Add files and subdirs and remove them
-Execute = 1 =x
-Run the file as a program
-Change to the directory as the $PWD, search it or execute programs from the dir. Access file metadata of files within the dir 
-no permission = 0 = -
+'<<` aka "here text" or "here command". Enables you to type text that can be  
+used as standard input for a command. The text to be used as standard input  
+has to be between a free-to-choose word. Example #1:  
+`mail root aname bname cusername <<TheStdInForTheMailCommand so root sends  
+the StdIn to the three users  
 
+### Using brace expansion characters
+Be careful with this!  
+`touch memo{1,2,3}` will create three files: memo1, memo2, memo3
+`rm -f memo{1,2,3}` will remove the three files just created; the -f option  
+ignores non-existent files and doesn’t prompt  
+`touch {John,Bill,Sally}-{Breakfast,Lunch}` will create all combinations with  
+a dash – in between
+`touch {a..f}{1..5}` does what you would expect based on what's above  
+`rm -i *` asks you before removing every file, y for yes n for no  
+`rm -R` deletes subfolders, be CAREFUL with this
+### Listing files and directories
+`ln` creates a hard link by default, option `-s` creates a soft link  
+Example on p. 106: `ln [options] [where to point to] [name of the pointer]`
+Example result of the above:  
+`lrwxrwxrwx. 1 Fedorauser Fedorauser    5 Dec 23 22:11 pointer_to_apple -> apple`  
+`-rwxr-xr-x. 1 Fedorauser Fedorauser    0 Dec 23 22:06 scriptx.sh`  
+`drwxrwxr-x. 2 Fedorauser Fedorauser 4096 Dec 23 22:06 Stuff`  
+`-rw-rw-r--. 1 Fedorauser Fedorauser    0 Dec  8 21:34 watermelon`  
+What you see after the 2nd "Fedorauser" (group name) is the number of  
+characters in bytes. Permission part: the `d` indicates a directory, lower  
+case L `l` indicates a symbolic link, a hyphen `-` a regular file, the `x` at  
+the end indicates that it is executable.  
+  
+When running `ls -l` there is total `[some number]` in the first line which  
+is the space consumed by the displayed files in kilobytes.  
+If there is an `s` somewhere in the permission column it means that it can be  
+run by any user. However, ownership does not change. This is called a UID/GID  
+(user/group ID) program.  
+  
+If there is a `t` at the end of the permission column it means that there is  
+a "sticky bit" which allows other users or groups to create files but prevents  
+the removal of others’ files. A capital `T` (sticky bit) and `S` (GID) means  
+that the permission was set without execute permission.  
+  
+A plus sign `+` means that an extended attribute such as SELinux or Access  
+Control Lists (ACLs) have been set.  
+  
+Show your own home directory using the tilde `~`: `echo ~`  
+Show other users’ home using `echo ~[otheruser]`  
+This also works with root: `echo ~root`  
+This also works when navigating: `cd ~someuser/test`  
+`cd` takes you to `$OLDPWD`  
+A single dot `.` is the `$PWD`  
+Two dots `..` are the directory above `$PWD`  
+`ls -t` displays the items in the order in which they were last modified  
+`ls -F` adds markers to the files to be displayed (easier to read)  
+`ls –hide=PATTERN` hides entries according to the pattern, e.g. `ls -hide=g*`  
+will hide any file beginning with the letter "g" (this trick is case sensitive)  
+`ls -ld some_dir_or_file one_more_file` is useless without the `-l` option.  
+But `-ld` shows information only for the specified directory/file  
+`ls -R` additionally shows subdirectories (careful, especially on root level!)  
+`ls -S` list files by size  
 
+### Understanding file permissions and ownership
 
-Changing permissions with chmod (numbers; always change all bits)
-drwxr-xr-x
-If you own a file you can change the permissions. Add the numbers (see table above) to define the permission for each type of user/group
-drwxr-xr-x
-owner’s permission group assigned to the file all others
-Example for full permission for all types of user/group 777 (7 = 4 + 2 + 1 for all)
-in terminal: chmod 777 file/directory
-recursive use for directories (similar to ls -R): chmod -R 755 $HOME/myapps
-^ -R applies to the directory itself and all subdirectories
-Changing permissions with chmod (letters; more precise, see below)
-see table above for the letters
+There are 9 permission bytes, use `ls -l` to see them and ignore the first  
+character (e.g. d=directory, see designators above): `drwxr-xr-x`  
+List of designators:  
+`d` = directory  
+`-` = file  
+`l` = symbolic link  
+`b` = block device: are addressable in device-specified chunks called blocks  
+and generally support seeking, the random access of data. They are often  
+abbreviated as `blkdev`. Block devices are accessed via a special file called  
+a block device node and generally mounted as a filesystem. Example: Hard-disk.  
+`c` = character device: are generally not addressable, providing access to  
+data only as a stream, generally characters i.e. bytes. They are often  
+abbreviated as `cdev`. They are accessed through a special node in  
+filesystem called as character device node. Example: Keyboard  
+`s` = socket, a special file used for bi-directional inter-process communication  
+`p` = named pipe, unidirectional communication  
+  
+Example: `drwxr-xr-x`  
+the first character is the designator (see above), followed by three sets of  
+permissions where the 1st three characters are the owner's permissions, the  
+2nd three are the group's permissions and the 3rd three are the permissions  
+of all others not belonging to neither owner or group. Also: `r` = read bit,  
+`w` = write, `x` = execute and `-` = nothing is assigned
+  
+The permissions allow what you would expect, but there is an exception:  
+Access to metadata of the files requires `x` permission because of inodes need  
+to be read.  
+  
+Setting permissions with `chmod [three numbers, each representing one of the 
+three sets of permissions mentioned above OR letters]`  where:  
+`r` = `4`  
+`w` = 2,  
+`x` = `1`  
+`-` = `0`  
+  
+Add those numbers to compose permissions, examples below.
+
+### Changing permissions with chmod (numbers; always change all three bits)
+
+Example permissions of a directory: `drwxr-xr-x`, remember that `d` is a  
+designator, `rwx` would be the owner's permission, `r-x` would be the  
+group's permission and the second `r-x` would be the permission of all others.  
+  
+If you own a file you can change the permissions. Add the numbers (see above)  
+to define the permission for each type of user/group.  
+  
+Example for full permission for all types of user/group (7 = 4 + 2 + 1 for all):  
+`chmod 777 [some file or directory]`
+You can use `chmod` recursively to set the permissions for deeper levels of  
+the folder structure (similar to ls -R): `chmod -R 755 $HOME/myapps`
+The above would apply `755` permissions to the directory itself AND all  
+subdirectories.
+  
+### Changing permissions with chmod (letters; more precise, see below)
+
+See above for the letters.  
+# Continue formatting notes here, p. 111
 + and - to add/remove permission respectively
 change permissions for the user = u, group = g, others = o, or all = a
 syntax is who/add or remove/what
