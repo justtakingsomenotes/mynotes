@@ -337,6 +337,11 @@ use `-- help` with the command
 use man pages with `man [command]`  
 use info pages with `info [command]` in case of `fg` there was much more info  
 via `info` than via `man`  
+#### Man pages deserve their own heading
+
+Check "VI and VIM" section. The search options there also apply to man pages  
+and enable you to search man pages effectively: `/`, `?`, `n` and `N`.
+  
 There are 8 manual page sections:  
   
 1. user commands
@@ -571,102 +576,177 @@ from the Prophet (nixCraft):
 5 = write only  
 6 = execute only  
 7 = no permissions  
-# elaborate umask and continue formatting here
-To change permanently, add a umask command to .bashrc (near the end of the file)
-umask -S makes that stuff human readable (this is useful), see man pages
-Changing file ownership
-Use chown - only root can do this.
-# chown joe /home/joe/memo.txt – memo.txt, created by root in joe’s $HOME now belongs to joe
-# chown joe:joe /home/joe/memo.txt memo.txt’s ownership AND group just change to joe and the joe-group
-chown also works with the recursive option (=the directory itself and all of its contents are included):
-chown -R joe:joe /media/myusb
-Moving, copying and removing files
-the normal stuff, except:
-alias mv to alias mv='mv -i' to ensure no files are accidentally deleted which is the default of mv if not aliased
-mv -b creates a backup of any file that would be overridden
-cp file1 file2
-cp file directory (the name of file is kept at the new location)
-cp -r /some_directory* /some_target_directory
-cp -ra does the same, except that permissions and date/time stamps are maintained
-see also cp --preserve in the man pages
-alias rm is also recommended
-rmdir delete empty directories
-run any command unaliased by using a backslash\ in front, e.g. \mv
-Chapter 5 Working with Text Files see p. 119
-VI and VIM
-vi:
-vi always starts in command mode before you can edit a file in the input mode. The ESC key (sometimes 2x ESC) brings you back to command mode when you are in input mode.
-Command mode commands (more: see book):
-a - add text to the file, to the right of the cursor
-A - add text to the end of the current line
-i - insert to the left of the cursor
-I - insert at the beginning of the current line
-o - opens a line below the current line and puts you in i mode
-O - opens a line above the current line and puts you in i mode
-H - move cursor to the upper-left corner of the screen
-M - see above but middle line
-L - see above but lower-left
-x - delete text under the cursor
-X - delete text directly before the cursor
-d + arrow keys - delete some text
-c + arrow keys - changes some text
-y + arrow keys - yanks=copies text
-P - copies strings to the left of the cursor, more than one line is copied above the current line
-p - see above but to the right and below
-Repeating commands: repeat the action (e.g. you just copied some text) by typing a period, see p. 122
-Exiting vi:
-ZZ or :wq - save and exit
-:w - save only
-:q - exit without saving (doesn't work if changes were made)
-:q! - exit without saving and closing vi
-u - undo changes
-CTRL+R - undo the undo
-DO NOT EVER USE CAPS LOCK in vi
-:![some shell command] - use any shell command from within vi and then return to vi after execution
-CTRL+G - show info about the file and where you are
-/[some word] - search for the word, forward direction
-?[some word - see above but backwards
-/The.*foot - search for a line that has The and after that at some point foot
-?[pP]rint - search backward for either print or Print
-After searching, type n (same direction) or N (opposite direction) to search again.
-The vi editor is based on the ex editor which has some useful commands, see p. 124
-Finding files with grep, locate, find and other tools
-Note: user permissions may limit the files that can be found, searches are case sensitive, use [OPTION] to ignore case sensitive, e.g. locate -i
-locate - find commands by name, searching through a database which is usually automatically updated on startup by the updatedb command --> faster but maybe not up to date, not every file is stored in said database, see /etc/updatedb.conf <-- check out with conf which files are not included in the database
-best they say --> find - find files based on lots of different attributes such as size, user or permission (see p. 128: -iname and -name); live search through the filesystem -->slower
-grep - search within text files to find lines in files that contain search text
-Too many error messages? Use, for example, find test /root 2> /dev/null to send STDERR to the next option, in this case Linux Nirvana /dev/null see also: https://en.wikipedia.org/wiki/Null_device
-File matching characters * and ? are supported
-Searching by size:
-find /usr/share/ -size +10M -size -5Gf
-Searching by user:
-find /home -user someuser -or -user someotheruser -ls
--not -or and -group also work
-Searching by permission: --> a good way to identify security issues
-find /home/someuser -perm -755 -type d -ls
-What do you find with -002? see p. 130
-Searching by date and time:
-Find files that were changed within the last 10 minutes: find /etc/ -mmin -10
-find /bin /usr/bin /sbin /usr/sbin -ctime -3 ownership or permissions changed within the last 3 days (H4XX0r?)
-find /var/ftp /var/www -atime +300 have not been accessed for +300 days
--atime -ctime -mtime -amin -cmin -mmin
-Combine all the above:
-find /var/all \( -user joe -or -user -chris -not group joe -and size +1M\) -ls
-Search and execute:
-find [options] -exec command {} \; <-- no questions asked
-find [options] -ok command {} \; <-- questions asked, the curly braces indicate where on the command line to read in each file that is found, each file can be included multiple times, \; means ending a line
-EXAMPLES:
-find /etc -iname iptables -exec echo "I found {}" \;
-find /var/allusers/ -user joe -ok mv {} /tmp/joe/ \;
-grep:
-search single files or directory structures recursively
-case sensitive is default, use -i option to search case-insensitive
-you can also search standard output
--v find all stuff that does NOT include what you passed with grep as an argument, example:
-grep -vi tcp /etc/services 
-grep -i tcp /etc/services this highlights the found text using --color
-super useful: pipe stuff to grep: ip addr show | grep inet
-Chapter 6 Managing running processes
+  
+To change permanently, add a `umask` command to `.bashrc` (near the end of  
+the file). `umask -S` makes that stuff human readable, see man pages.  
+
+### Changing file ownership
+
+Use `chown` - only root can do this.  
+  
+`chown joe /home/joe/memo.txt` – memo.txt, created by root in joe’s `$HOME`  
+now belongs to joe  
+`chown joe:joe /home/joe/memo.txt` memo.txt’s ownership AND group just  
+changed to joe and the joe-group  
+`chown` also works with the recursive option (=the directory itself and all  
+of its contents are included): `chown -R joe:joe /media/myusb`  
+
+### Moving, copying and removing files
+
+Known stuff, except:  
+Better do an alias for `mv` to `alias mv='mv -i'` to ensure no files are  
+accidentally deleted which is the default of `mv` if not aliased  
+`mv -b` creates a backup of any file that would be overridden  
+  
+`cp file1 file2`  
+`cp [file] [directory]` (the name of file is kept at the new location)  
+`cp -r /some_directory* /some_target_directory` recursive  
+`cp -ra` does the same as above, `-a` is for maintaining permissions and  
+date/time stamps  
+see also `cp --preserve` in the man pages  
+aliasing `rm` to `alias rm="rm -i"` is also recommended  
+`rmdir` delete EMPTY directories, CAREFUL: delete directories with `rm -r` and  
+consider to only use `rm -ri [directory]`  
+run any command unaliased by using a backslash in front, e.g. `\mv`  
+
+## Ch 5 Working with Text Files
+
+See p. 119. Mental stability suffers when using `vi` or `vim`. `nano` is often  
+available as well and saves you lots of headaches. Purists seem to prefer  
+vi(m) though.  
+
+### VI and VIM
+
+vi has a command mode and an input mode:  
+vi always starts in command mode before you can edit a file in the input mode.  
+The `ESC` key (sometimes 2x `ESC`) brings you back to command mode when you  
+are in input mode.  
+Command mode commands (more: see book):  
+`a` - add text to the file, to the right of the cursor  
+`A` - add text to the end of the current line  
+`i` - insert to the left of the cursor  
+`I` - insert at the beginning of the current line  
+`o` - opens a line below the current line and puts you in i mode  
+`O` - opens a line above the current line and puts you in i mode  
+`H` - move cursor to the upper-left corner of the screen  
+`M` - see above but middle line  
+`L` - see above but lower-left  
+`x` - delete text under the cursor  
+`X` - delete text directly before the cursor  
+`d + arrow keys` - delete some text  
+`c + arrow keys` - changes some text  
+`y + arrow keys` - yanks=copies text  
+`P` - copies strings to the left of the cursor, more than one line is copied  
+above the current line  
+`p` - see above but to the right and below  
+  
+Repeating commands: repeat the action (e.g. you just copied some text) by  
+typing a period, see p. 122.  
+  
+Exiting vi:  
+`ZZ` or `:wq` - save and exit  
+`:w` - save only  
+`:q` - exit without saving (doesn't work if changes were made)  
+`:q!` - exit without saving and closing vi  
+`u` - undo changes  
+`CTRL+R` - undo the undo  
+  
+DO NOT EVER USE CAPS LOCK in vi  
+  
+OK, seems to be a strength of vi: `:![some shell command]` - use any shell  
+command from within vi and then return to vi after execution  
+`CTRL+G` - show info about the file and where you are  
+`/[some word]` - search for the word, forward direction, also works in man pages  
+`?[some word]` - see above but backwards, also works in man pages  
+`/The.*foot` - search for a line that has "The" and after that at some point  
+"foot"  
+`?[pP]rint` - search backward for either print or Print  
+  
+After searching, type `n` (same direction) or `N` (opposite direction) to  
+search again.  Also works in man pages.  
+The vi editor is based on the ex editor which has some useful commands, see  
+p. 124.  
+
+### Finding files with grep, locate, find and other tools
+
+Note: user permissions may limit the files that can be found, searches are  
+case sensitive, use [OPTION] to ignore case sensitive, e.g. `locate -i`  
+  
+`locate` - find commands by name, searching through a database which is  
+usually automatically updated on startup by the updatedb command --> faster  
+but maybe not up to date, not every file is stored in said database, see  
+`/etc/updatedb.conf` <-- check out with conf which files are not included in  
+the database.  
+  
+best they say --> `find` - find files based on lots of different attributes  
+such as size, user or permission (see p. 128: `-iname` and `-name`); live  
+search through the filesystem -->slower  
+  
+`grep` - search within text files to find lines in files that contain search  
+text. Cool example when you want to start Flask the 2nd time in your life:  
+`history|grep FLASK`  
+  
+Too many error messages? Use, for example, `find test /root 2> /dev/null` to  
+send STDERR to the next option, in this case Linux Nirvana `/dev/null`. See  
+also: [Null device wikipedia page](https://en.wikipedia.org/wiki/Null_device)  
+  
+File matching characters `*` and `?` are supported  
+  
+Searching by size:  
+  
+`find /usr/share/ -size +10M -size -5Gf`
+  
+Searching by user:  
+  
+`find /home -user someuser -or -user someotheruser -ls`  
+`-not`, `-or` and `-group` also work as described above  
+  
+Searching by permission: --> a good way to identify security issues  
+  
+`find /home/someuser -perm -755 -type d -ls`  
+What do you find with -002? see p. 130  
+  
+Searching by date and time:  
+  
+Find files that were changed within the last 10 minutes: `find /etc/ -mmin -10`  
+  
+Find the evil hacker with `find /bin /usr/bin /sbin /usr/sbin -ctime -3` which  
+shows whether ownership or permissions changed within the last 3 days  
+  
+`find /var/ftp /var/www -atime +300` have not been accessed for +300 days  
+Check man pages: `-atime -ctime -mtime -amin -cmin -mmin`  
+  
+Combine all the above:  
+  
+`find /var/all \( -user joe -or -user -chris -not group joe -and size +1M\) -ls`  
+  
+Search and execute:  
+  
+`find [options] -exec command {} \;` <-- prompt does not ask questions  
+`find [options] -ok command {} \;` <-- prompt does ask questions, the curly  
+braces indicate where on the command line to read in each file that is found,  
+each file can be included multiple times, `\;` means ending a line.  
+  
+EXAMPLES:  
+`find /etc -iname iptables -exec echo "I found {}" \;`  
+`find /var/allusers/ -user joe -ok mv {} /tmp/joe/ \;`  
+  
+grep:  
+  
+search single files or directory structures recursively  
+case sensitive is default, use `-i` option to search case-insensitive  
+you can also search standard output  
+  
+`-v` find all stuff that does NOT include what you passed with grep as an  
+argument, example: `grep -vi tcp /etc/services`  
+`grep -i tcp /etc/services`
+`--color`this highlights the found text  
+  
+super useful: pipe stuff to grep: `ip addr show | grep inet` (see also: Flask  
+example above)  
+  
+## Ch 6 Managing running processes
+
 Process = running instance of a command
 Process ID = unique number, may be reused, associated with a particular user account and group account
 each process stores its raw information in a subdirectory of /proc
