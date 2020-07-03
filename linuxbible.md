@@ -8,7 +8,7 @@ Ubuntu as well.
 
 No news but Ubuntu does `sudo` by default while fedora does apparently not.  
 Root stuff with `su` in fedora until the Bible explains how to enable  
-`sudo`. In case commands are not installed `sudo apt-get install [command]` or  
+`sudo`. In case commands are not installed `sudo apt-get install [command]` or    
 `sudo snap install [command]` for Ubuntu and `dnf install [command]` for  
 fedora.
 
@@ -40,7 +40,7 @@ which have a dot in front of their name, t=time, list by time
   
 Example of a hidden file: `.bash_history`, visible only when using the  
 `-a` argument  
-
+  
 `ls --all` does the same as ls -a, double dash is the long way, see man pages  
   
 With single letter options (e.g.`-l`) the argument (`ls -l Downloads`  
@@ -121,7 +121,7 @@ many options and arguments shorter
 `type which`, `type case`, `type return` and `type -a ls` make the difference  
 between command types clearer  
   
-Command not found? Spelling, case sensitive! Is it in your PATH variable?
+Command not found? Spelling, case sensitive! Is it in your PATH variable?  
 Permission denied to run command? It is in your PATH but not executable  
   
 Don't know where command is located? Use `locate`, e.g. `locate chage`  
@@ -164,7 +164,7 @@ any number you see, say 1, run `fc 1` and the text editor opens and there is
 already the command you saw behind "1" in the text editor.  
   
 Exit `vi` or `vim` by typing `:q!` or type `:wq!` to save file and exit.  
-AFTER CLOSING THE TEXT EDITOR THE COMMANDS YOU SAW ARE EXECUTED!!!
+AFTER CLOSING THE TEXT EDITOR THE COMMANDS YOU SAW ARE EXECUTED!!!  
   
 THESE COMMANDS ARE RUN AFTER CLOSING TEXT EDITOR!!!  
 `fc [number from history command] [other number from history command]` puts  
@@ -197,7 +197,7 @@ that you cannot see all the output. Then do `ls | more`. You just piped the
 output of `ls` to the input of `more`. Press any key to continue in more's  
 list. Press `q` to leave the output of `more`. `q` also lets you exit from  
 the man pages of any command, try `man [any command such as ls]` and exit  
-what you see by typing `q`.
+what you see by typing `q`.  
   
 `cat [any file] [another file]` concatenate files and print them on the  
 standard output. Also works with only one file the content of which will be  
@@ -213,7 +213,7 @@ running in the backgroud.
 (not single quotes) make the output of the command interpreted by the shell  
 instead of by the command itself in order to use the output as an argument  
 for another command. Example: `nano $(find /home | grep xyzzy)`  
-
+  
 `$(expression)` passing an arithmetic expression to a command, example: 
 `echo "I'm $(2018 - 1985) years old."` or  
 `echo "There are $(ls | wc -w) files in this directory."`  
@@ -277,7 +277,7 @@ arguments provided after 'source' in the current shell environment, example:
 `source $HOME/.bashrc`  
 Why does `source` look familiar to me? Because I created and activated a  
 virtual environment in all the Python tutorials I did and never understood  
-what I'm actually doing: `. venv/bin/activate`
+what I'm actually doing: `. venv/bin/activate` aka `source venv/bin/activate`  
   
 `$HOME` is a replacement for `~` which are both shortcuts to your home folder  
   
@@ -291,28 +291,28 @@ Linux Bible
 `echo $PS1` is insightful because you can derive what PS1 must look like in  
 order to create the prompt that you want to have. Ever wondered how all those  
 highly skilled tech tutorial youtubers can have prompts that are better than  
-yours? They changed the PS1 variable.    
+yours? They changed the PS1 variable.  
 Do not ever forget to comment (octothorpe aka hashtag) out what you  
 find .bashrc (as backup) and also comment what you change.  
 Corey Schafer's PS1 looks probably similar to this (apart from the debian stuff):  
 `PS1='\nIt is \e[1;36m\A\e[m. ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] in directory:\n\[\033[01;34m\]\w\[\033[00m\] \n$ '`  
-nixCraft is the source you want consult when it comes to stuff like this.
-
+nixCraft is the source you want consult when it comes to stuff like this.  
+  
 PS2 is often set to `>`  
 You get this prompt `>` if you type something in the command line and end it  
-with `\`
+with `\`  
 
 ### Adding environment variables
 
 Just put them at the end and don't forget to export and comment (octothorpe  
 aka hashtag). Check pp. 91-92 of the Linux Bible. This looks useful for  
 the Flask variables.  
-
+  
 Examples:  
 Assuming I saved my own commands in /getstuff/bin then the following line  
 would make them accessible: `PATH=$PATH:/getstuff/bin ; export PATH`  
 If I now do a `echo $PATH` I would see that `/getstuff/bin` was appended  
-to the end of echo's output.
+to the end of echo's output.  
   
 The following is bad practise because it would run commands in any current  
 directory: `PATH=$.:$PATH ; export PATH`  
@@ -322,19 +322,19 @@ would be prepended to your `$PATH` AND an `export` takes place at the same
 time which makes the changes effective not only for the commands being called  
 but also in the calling program (bash itself). More on this [here](https://unix.stackexchange.com/a/26067).  
 `echo $PATH` would reveal that the dot is at the beginning of the output.  
-Remember: commands are checked against `$PATH` from left to right.
+Remember: commands are checked against `$PATH` from left to right.  
   
-Auto time-out after 30 minutes, use seconds: `TMOUT=1800`
+Auto time-out after 30 minutes, use seconds: `TMOUT=1800`  
   
 You can basically assign anything to an environment variable that is not  
-yet used: `COOLSHORTCUT=some_folder ; export COOLSHORTCUT`
+yet used: `COOLSHORTCUT=some_folder ; export COOLSHORTCUT`  
 
 ### Getting information about commands
 
 `echo $PATH` shows you all the paths that contain commands  
 `help | less` shows built-in commands  
 use `-- help` with the command  
-use man pages with `man [command]`
+use man pages with `man [command]`  
 use info pages with `info [command]` in case of `fg` there was much more info  
 via `info` than via `man`  
 There are 8 manual page sections:  
@@ -350,6 +350,7 @@ There are 8 manual page sections:
   
 Just `man` always gives you section 1.  
 Access specific sections like this `man 5 passwd`  
+  
 Access name+summary sections of all man pages typing this:  
 `man -k passwd` (VERY COOL)  
 In a man page, press `/` then you can search the man page for a specific term.  
@@ -357,8 +358,8 @@ In a man page, press `/` then you can search the man page for a specific term.
 ## Ch 4 Moving around the filesystem
 
 Check directory tree and info on pp. 98-99 for common directories.  
-`bin` common linux user commands
-`boot` contains the bootable kernel and the boot loader
+`bin` common linux user commands  
+`boot` contains the bootable kernel and the boot loader  
 `dev` devices, e.g. tty* (terminal), fd (floppy disk), hd* or sd* (hard disk),  
 ram*,  cd*  
 `home` directories for each user, except root who has his “home” directory  
@@ -375,7 +376,7 @@ the predecessor of `/media`.
 `root` home folder of root user. It’s not within `/home` for security reasons  
 `tmp` tmp files used by applications  
 `usr` user documentation, games, graphical files (X11), libraries (lib), other  
-commands, files not needed during the boot process
+commands, files not needed during the boot process  
 `var` used by various applications, meant to contain stuff that changes often  
 such as files on an FTP or web server  
 
@@ -399,7 +400,7 @@ The fact that a user is in a group with the same name like himself is called
 `chmod 700 [file or directory]` gives me full access (read write execute) to  
 the file/directory and everyone else no access at all  
   
-### Using metacharacters and operators see pp. 102-105 in Linux Bible  
+### Using metacharacters and operators see pp. 102-105 in Linux Bible
   
 File-matching metacharacters, like regular expressions:  
   
@@ -431,18 +432,21 @@ has to be between a free-to-choose word. Example #1:
 the StdIn to the three users  
 
 ### Using brace expansion characters
+
 Be careful with this!  
 `touch memo{1,2,3}` will create three files: memo1, memo2, memo3
 `rm -f memo{1,2,3}` will remove the three files just created; the -f option  
 ignores non-existent files and doesn’t prompt  
 `touch {John,Bill,Sally}-{Breakfast,Lunch}` will create all combinations with  
-a dash – in between
+a dash – in between  
 `touch {a..f}{1..5}` does what you would expect based on what's above  
 `rm -i *` asks you before removing every file, y for yes n for no  
 `rm -R` deletes subfolders, be CAREFUL with this
+
 ### Listing files and directories
+
 `ln` creates a hard link by default, option `-s` creates a soft link  
-Example on p. 106: `ln [options] [where to point to] [name of the pointer]`
+Example on p. 106: `ln [options] [where to point to] [name of the pointer]`  
 Example result of the above:  
 `lrwxrwxrwx. 1 Fedorauser Fedorauser    5 Dec 23 22:11 pointer_to_apple -> apple`  
 `-rwxr-xr-x. 1 Fedorauser Fedorauser    0 Dec 23 22:06 scriptx.sh`  
@@ -507,20 +511,20 @@ the first character is the designator (see above), followed by three sets of
 permissions where the 1st three characters are the owner's permissions, the  
 2nd three are the group's permissions and the 3rd three are the permissions  
 of all others not belonging to neither owner or group. Also: `r` = read bit,  
-`w` = write, `x` = execute and `-` = nothing is assigned
+`w` = write, `x` = execute and `-` = nothing is assigned  
   
 The permissions allow what you would expect, but there is an exception:  
 Access to metadata of the files requires `x` permission because of inodes need  
 to be read.  
   
-Setting permissions with `chmod [three numbers, each representing one of the 
+Setting permissions with `chmod [three numbers, each representing one of the  
 three sets of permissions mentioned above OR letters]`  where:  
 `r` = `4`  
 `w` = 2,  
 `x` = `1`  
 `-` = `0`  
   
-Add those numbers to compose permissions, examples below.
+Add those numbers to compose permissions, examples below.  
 
 ### Changing permissions with chmod (numbers; always change all three bits)
 
@@ -532,27 +536,42 @@ If you own a file you can change the permissions. Add the numbers (see above)
 to define the permission for each type of user/group.  
   
 Example for full permission for all types of user/group (7 = 4 + 2 + 1 for all):  
-`chmod 777 [some file or directory]`
+`chmod 777 [some file or directory]`  
 You can use `chmod` recursively to set the permissions for deeper levels of  
-the folder structure (similar to ls -R): `chmod -R 755 $HOME/myapps`
+the folder structure (similar to ls -R): `chmod -R 755 $HOME/myapps`  
 The above would apply `755` permissions to the directory itself AND all  
-subdirectories.
+subdirectories.  
   
 ### Changing permissions with chmod (letters; more precise, see below)
 
-See above for the letters.  
-# Continue formatting notes here, p. 111
-+ and - to add/remove permission respectively
-change permissions for the user = u, group = g, others = o, or all = a
-syntax is who/add or remove/what
-Example1: chmod a-w filename
-Example2: chmod ug+rx
-Why is this  more precise? chmod -R o-w $HOME/myapps changes one bit as opposed to chmod 755 or 644
-Setting default file permissions with umask
-A file created as a regular user gets by default:
--rw-rw-r--
-Files created by root may have other values. These default values are determined by the umask command. Type usmask to find out what the present umask value is, example:
-0002
+See above for the letters: `r`, `w`, `x` and the hyphen `-`  
+  
+`+` and `-` to add/remove permission respectively  
+change permissions for the user = `u`, group = `g`, others = `o`, or all = `a`  
+syntax is `chmod [ugoa][+-][rwx-]`  
+Example1: `chmod a-w filename`  
+Example2: `chmod -R ug+rx folder`  
+Why is this more precise? `chmod -R o-w $HOME/myapps` changes one bit only  
+as opposed to `chmod 755` or `chmod 644`  
+
+### Setting default file permissions (users and root) with umask
+
+A file created as a regular user gets by default:  
+`-rw-rw-r--`  
+Files created by root may have other values. These default values are  
+determined by the `umask` command. Type `umask` to find out what the present  
+umask value is, example: `0002`. This is an octal value. Octal values stolen  
+from the Prophet (nixCraft):  
+  
+0 = read, write and execute  
+1 = read and write  
+2 = read and execute  
+3 = read only  
+4 = write and execute  
+5 = write only  
+6 = execute only  
+7 = no permissions  
+# elaborate umask and continue formatting here
 To change permanently, add a umask command to .bashrc (near the end of the file)
 umask -S makes that stuff human readable (this is useful), see man pages
 Changing file ownership
