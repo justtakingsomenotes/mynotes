@@ -1,6 +1,8 @@
 # Linux Bible
 
 Note to beginner self: `vim` not good for mental health, use `nano` instead.  
+Use `vimtutor` when you start writing lots of stuff because once you get `vim`,  
+it is actually useful.  
 Additional note to self: Linux Bible is about fedora but most stuff works in  
 Ubuntu as well.
 
@@ -426,27 +428,32 @@ This also works with ranges: `ls [a-g]\*`
 
 `>` directs the standard output of a command to a file (Warning:  
 overriding whatever is already in the file)  
+  
 `2>` directs standard error (i.e. error messages) to a file  
+  
 `&>` directs both standard output and standard error to the file  
+  
 `>>` directs the output of a command to a file, adding the output to the  
 end of the existing file (appending to a new line)  
-'<<` aka "here text" or "here command". Enables you to type text that can be  
-used as standard input for a command. The text to be used as standard input  
-has to be between a free-to-choose word. Example #1:  
-`mail root aname bname cusername <<TheStdInForTheMailCommand so root sends  
-the StdIn to the three users  
+  
+`<<` aka "here text" or "here command". Enables you to type text that can be  
+used as STDIN for a command. The text to be used as standard input  
+has to be between a free-to-choose word. Example:  
+  
+`mail root aname bname cusername <<TheStdInForTheMailCommand` - root sends  
+the STDIN to the three users  
 
 ### Using brace expansion characters
 
 Be careful with this!  
-`touch memo{1,2,3}` will create three files: memo1, memo2, memo3
+`touch memo{1,2,3}` will create three files: memo1, memo2, memo3  
 `rm -f memo{1,2,3}` will remove the three files just created; the -f option  
 ignores non-existent files and doesn’t prompt  
 `touch {John,Bill,Sally}-{Breakfast,Lunch}` will create all combinations with  
 a dash – in between  
 `touch {a..f}{1..5}` does what you would expect based on what's above  
 `rm -i *` asks you before removing every file, y for yes n for no  
-`rm -R` deletes subfolders, be CAREFUL with this
+`rm -R` deletes subfolders, be CAREFUL with this  
 
 ### Listing files and directories
 
@@ -522,10 +529,11 @@ The permissions allow what you would expect, but there is an exception:
 Access to metadata of the files requires `x` permission because of inodes need  
 to be read.  
   
-Setting permissions with `chmod [three numbers, each representing one of the  
-three sets of permissions mentioned above OR letters]`  where:  
+Setting permissions with  
+`chmod [three numbers, each representing one of the three sets of permissions mentioned above OR letters]`  
+where:  
 `r` = `4`  
-`w` = 2,  
+`w` = 2`  
 `x` = `1`  
 `-` = `0`  
   
@@ -747,35 +755,73 @@ example above)
   
 ## Ch 6 Managing running processes
 
-Process = running instance of a command
-Process ID = unique number, may be reused, associated with a particular user account and group account
-each process stores its raw information in a subdirectory of /proc
-user cat or less within /proc for more information
-Listing processes with ps
-ps = list processes associated with the terminal
-top = more screen oriented and can change the status of processes
-ps u = provides more information (STAT column: R=running process, S=sleeping process, + = foreground operation, etc; VSZ column = virtual set size, RSS = resident set size which is memory in kb allocated to the process and used respectively, RSS cannot be swapped as it is physocal memory; TIME column = CPU time used in seconds)
-ps aux | less = show all process of all users, not only associated with the terminal, also background processes
-ps ux = same except only processes for user running the commands
-ps -eo pid,user,rss --sort=-rss | less = -e running processes, -o show items specified after the command options and sort by RSS column
-Listing processes with top
-top sorts by default by CPU time currently used
-(renice means reprioritise)
-only root can kill processes using top unless top is used to kill a process owned by user running top
-information of top is updated every 5 seconds by default
-p. 141 for top options
-press one to toggle through the different CPUs
-press u and enter username to display user-specific processes
-Killing and renicing (NI column show nice value) processes while top is running:
-note process ID and press r to renice, type in PID and give new priority from -20 to 19 (aka nice value) where negative numbers mean higher priority
-...or press k to kill a process. Then type 15 to kill cleanly or 9 to kill outright
-Listing processes with System Monitor (Gnome)
-By default, only running processes associated with the user are displayed
-menu button with "3 bars" lets you select other users' processes
-Managing background and foreground processes
-in terminal: firefox & means to run firefox without attaching it to the terminal it was run from which means to run it in the background
-another example: find /usr > /tmp/alluserfiles &
-the ampersand (&) thing results in a line in terminal looking like [3] 12345 = [job number] PID
+Process = running instance of a command, note to self: check whether this is  
+the same concept as classes and their instances in Python  
+  
+Process ID = unique number, may be reused, associated with a particular user  
+account and group account  
+  
+each process stores its raw information in a subdirectory of `/proc`  
+  
+use `cat` or `less` or `more` within `/proc` for more information
+
+### Listing processes with ps
+
+`ps` = list processes associated with the terminal  
+  
+`top` = more screen oriented and can change the status of processes  
+  
+`ps u` = provides more information (STAT column: R=running process,  
+S=sleeping process, + = foreground operation, etc; VSZ column = virtual set size,  
+RSS = resident set size which is memory in kb allocated to the process and  
+used respectively, RSS cannot be swapped as it is physical memory; TIME  
+column = CPU time used in seconds)  
+  
+`ps aux | less` = show all process of all users, not only associated with  
+the terminal, also background processes  
+  
+`ps ux` = same as above except only processes for user running the commands  
+  
+`ps -eo pid,user,rss --sort=-rss | less` = `-e` running processes, `-o` show  
+items specified after the command options and sort by RSS column  
+Listing processes with top (VERY COOL)  
+  
+`top` sorts by default by CPU time currently used  
+(renice means reprioritise)  
+  
+only root can kill processes using `top` unless `top` is used to kill a  
+process owned by user running `top`  
+  
+information of `top` is updated every 5 seconds by default  
+p. 141 for `top` options  
+  
+press `1` to toggle through the different CPUs, press `u` and enter  
+username to display user-specific processes  
+  
+Killing and renicing (NI column show nice value) processes while `top` is  
+running:  
+take a note of the process ID and press `r` to renice, type in PID and give  
+new priority from -20 to 19 (aka nice value) where negative numbers mean  
+higher priority  
+...or press `k` to kill a process. Then type `15` to kill cleanly or `9` to  
+kill outright  
+
+### Listing processes with System Monitor (Gnome)
+
+By default, only running processes associated with the user are displayed.  
+Menu button with "3 bars" lets you select other users' processes.  
+
+### Managing background and foreground processes
+
+VERY COOL - in terminal: `firefox &` means to run firefox without attaching  
+it to the terminal it was run from which means to run it in the BACKGROUND.  
+  
+Conclusion of using the ampersand `&`: `&` results in a line in terminal  
+looking like `[3] 12345` where `[job number] [PID of what's in front of &]`.  
+Then the program is started outside the terminal without blocking it.  
+Not using `&` would (normally) block the terminal until the program is closed.  
+  
+# Continue formatting here
 "at" let's you schedule processes (see man pages, tons of options)
 jobs = show commands running in the background, +/- signs mean that the process has been placed to the fore-/background most recently respectively
 all jobs requiring terminal input cannot run in the background and are therefore stopped when until put back to the foreground again
