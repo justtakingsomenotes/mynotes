@@ -416,9 +416,9 @@ File-matching metacharacters, like regular expressions:
 `[...]` Matches any one of the characters between the brackets, which can  
 include a hyphen-separated range of letters  
 `touch` change file timestamps or create new file if argument does not exist  
-`ls [abw]\\*` any file beginning with a, b, w is matched  
-`ls [abw]\\*[ne]` see above plus ending with either n or e is also matched  
-This also works with ranges: `ls [a-g]\\*`  
+`ls [abw]*` any file beginning with a, b, w is matched  
+`ls [abw]*[ne]` see above plus ending with either n or e is also matched  
+This also works with ranges: `ls [a-g]*`  
 
 ### File-redirection metacharacters  
 
