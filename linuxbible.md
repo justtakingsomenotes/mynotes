@@ -214,7 +214,7 @@ running in the backgroud.
 instead of by the command itself in order to use the output as an argument  
 for another command. Example: `nano $(find /home | grep xyzzy)`  
   
-`$(expression)` passing an arithmetic expression to a command, example: 
+`$(expression)` passing an arithmetic expression to a command, example:  
 `echo "I'm $(2018 - 1985) years old."` or  
 `echo "There are $(ls | wc -w) files in this directory."`  
   
@@ -295,7 +295,7 @@ yours? They changed the PS1 variable.
 Do not ever forget to comment (octothorpe aka hashtag) out what you  
 find .bashrc (as backup) and also comment what you change.  
 Corey Schafer's PS1 looks probably similar to this (apart from the debian stuff):  
-`PS1='\nIt is \e[1;36m\A\e[m. ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] in directory:\n\[\033[01;34m\]\w\[\033[00m\] \n$ '`  
+` PS1='\nIt is \e[1;36m\A\e[m. ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] in directory:\n\[\033[01;34m\]\w\[\033[00m\] \n$ ' `  
 nixCraft is the source you want consult when it comes to stuff like this.  
   
 PS2 is often set to `>`  
@@ -414,9 +414,9 @@ File-matching metacharacters, like regular expressions:
 `[...]` Matches any one of the characters between the brackets, which can  
 include a hyphen-separated range of letters  
 `touch` change file timestamps or create new file if argument does not exist  
-`ls [abw]* any file beginning with a, b, w is matched  
-`ls [abw]*[ne]` see above plus ending with either n or e is also matched  
-This also works with ranges: `ls [a-g]*`  
+`ls [abw]\*` any file beginning with a, b, w is matched  
+`ls [abw]\*[ne]` see above plus ending with either n or e is also matched  
+This also works with ranges: `ls [a-g]\*`  
 
 ### File-redirection metacharacters  
 
