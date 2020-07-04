@@ -416,9 +416,9 @@ File-matching metacharacters, like regular expressions:
 `[...]` Matches any one of the characters between the brackets, which can  
 include a hyphen-separated range of letters  
 `touch` change file timestamps or create new file if argument does not exist  
-`ls [abw]\*` any file beginning with a, b, w is matched  
-`ls [abw]\*[ne]` see above plus ending with either n or e is also matched  
-This also works with ranges: `ls [a-g]\*`  
+`ls [abw]\\*` any file beginning with a, b, w is matched  
+`ls [abw]\\*[ne]` see above plus ending with either n or e is also matched  
+This also works with ranges: `ls [a-g]\\*`  
 
 ### File-redirection metacharacters  
 
@@ -533,7 +533,7 @@ Setting permissions with
 `chmod [three numbers, each representing one of the three sets of permissions mentioned above OR letters]`  
 where:  
 `r` = `4`  
-`w` = 2`  
+`w` = `2`  
 `x` = `1`  
 `-` = `0`  
   
@@ -724,7 +724,7 @@ shows whether ownership or permissions changed within the last 3 days
 `find /var/ftp /var/www -atime +300` have not been accessed for +300 days  
 Check man pages: `-atime -ctime -mtime -amin -cmin -mmin`  
   
-Combine all the above:  
+Combine all of the above:  
   
 `find /var/all \( -user joe -or -user -chris -not group joe -and size +1M\) -ls`  
   
