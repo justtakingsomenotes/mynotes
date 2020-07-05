@@ -974,7 +974,7 @@ Example script #2, taking arguments and doing stuff as commented:
   
 ```
 #!/bin/bash  
-# Script to echo out stuff  
+# This is a comment: Script to echo out stuff  
 echo "First argument is $1, second is $2."  
 echo "The command itself is $0."  
 echo "The number of parameters is $#."  
@@ -991,95 +991,155 @@ Newlines can be made using echo with the -e parameter and n with
 a backslash in front."  
 ```  
   
+`echo` - place an echo with quotes at the beginning of lines within a body  
+of a loop to see what's going on, no permanent changes are made that way  
   
-# Bible p. 153, do update script, continue formatting here
-# for comments in the script
-echo - place an echo with quotes at the beginning of lines within a body of a loop to see what's going on, no permanent changes are made that way
-use dummy echo statements everywhere to check whether the correct logic branch is being taken
-bash -x some_script or "set -x" near the beginning of the script to display each command that is executed
-Comment! A lot!
-Understanding shell variables
-Variable naming convention, touching the equal sign: NAME=value
-Variables can contain the output of a command or the output of a series of commands
-(e.g. use pipe | ). <-- COOL!
-MYDATE=$(date) assigns the output of the date command to the variable AT THE TIME WHEN THE VARIABLE IS READ
-MYDATE=$`date` assigns the output of the date command to the variable AT THE TIME WHEN THE VARIABLE IS SET; this (`) is a backtick
-!!! Check whether the above is true --> yes it is
-Escaping special shell characters:
-$ ! ` * and probably others are special characters
-\ escape a single character with a backslash
-'' escape a string of characters with two single quotes
-"" two double quotes escape all but the special characters, except asterisks*
-Example: echo '$HOME *** `date`' versus echo "$HOME *** `date`"
-Example --> Storing the number of files in a folder to a variable --> NUM_FILES=$(/bin/ls | wc -l)
-Example --> Storing PC info to a variable --> MACHINE=$`uname -n ; uname -a`
-see metacharacters for most efficient use
-Preserving a variable value that may change in the future:
-Just assign the present value of a variable to another variable, e.g. BALANCE="$CurBalance"
-Note how the $ sign is used
-Special shell positional parameters
-$0, $1, §2, $n while $0 is special and these can be used as placeholders similar to Python's f-strings
---> positional parameters and
---> command line arguments
-Check this script:
-#!/bin/bash
-# Script to echo out stuff
-echo "First argument is $1, second is $2."
-echo "The command itself is $0."
-echo "The number of parameters is $#."
-echo "All arguments given were $@."
-echo -e "The exit status of the last command executed was $? \nwhere zero means that said command was executed succesfully\n and anything other than zero means something went wrong, see bash man page.\nAnd by the way, the newlines were made using echo with the -e parameter and n with\na backslash in front and I don't know how to escape the backslash."
-...saving the script in user's $PATH, making it executable and running the script...
-chmod 755 /home/some_user/bin/myscript
-myscript foo bar
-...this results in...
-First argument is foo, second is bar.
-The command itself is /home/Fedorauser/bin/myscript.
-The number of parameters is 2.
-All arguments given were foo bar.
-The exit status of the last command executed was 0 
-where zero means that said command was executed succesfully
- and anything other than zero means something went wrong, see bash man page.
-And by the way, the newlines were made using echo with the -e parameter and n with
-a backslash in front and I don't know how to escape the backslash.
-SEE man bash for all kinds of magic, including loops, if-statements and stuff
-Reading in parameters
-#!/bin/bash
-read -p "What you type in here will be stored in var1 var2 and var3 in the scri>
-echo "Here is what you typed: $var1 $var2 and finally $var3"
+use dummy echo statements everywhere to check whether the correct logic  
+branch is being taken  
+  
+VERY COOL: `bash -x some_script` or "set -x" near the beginning of the  
+script to display each command that is executed  
+  
+Comment! A lot!  
 
-Parameter expansion in bash
-$VAR is shorthand for ${VAR}
-curly braces are used when the value of the parameter needs to be placed next to other text without a space
-Examples:
-${VAR:-value} --> if variable is unset or empty, expand this to value
-${VAR:##pattern} --> chop the longest match for pattern from the front of var's value
-see p. 157-158 like REGEX and usefull
-Performing arithmetic shell scripts
-Variables are normally treated as strings (i.e. text).
-Use declare to specify another file type.
-Use in-built let to let bash know that we are dealing with numbers, see also: help let
-External options: expr and bc, see man pages
-let foo=$RANDOM; echo $foo
-let doesn't like spaces between operands
-expr, however, does
-bc is not that picky and accepts both most of the timestamps
-Set the variable I to zero and the echo $((++I)) $((I++)) $((--I)) $((I--))$((-I)) and see how the number is incremented or decreased
-Using programming constructs in shell scripts
- see p. 159-169 very cool, operators on p. 161, also in bash: help test
-the condition can be the output of a command
--eq works better for numbers while = works better with strings
-better put strings in double quotes
-!= unequal, we know that
-if [ condition ]; then
-elif
-else
-fi
-Double pipe: [ condition ] || action
-Double ampersand: [ condition ] && action <-- you can combine them || && for a one-line if-then-else
-dirname="/tmp/testdir"
-[ -d "$dirname" ] || mkdir "$dirname"
-If directory isn't there then create it.
+### Understanding shell variables
+
+Variable naming convention, touching the equal sign: `NAME=value`  
+  
+Variables can contain the output of a command or the output of a series of  
+commands, e.g. use pipe `|` <-- VERY COOL!  
+  
+`MYDATE=$(date)` assigns the output of the date command to the variable AT  
+THE TIME WHEN THE VARIABLE IS READ  
+  
+In contrast:  
+```
+MYDATE=$`date`
+```  
+assigns the output of the date command to the variable AT THE TIME WHEN  
+THE VARIABLE IS SET, note the backticks vs the brackets  
+
+### Escaping special shell characters
+
+```
+$ ! ` *
+```  
+and probably others are special characters  
+  
+escape a single character with a backslash  
+  
+escape a string of characters with two single quotes  
+  
+two double quotes escape all but the special characters, except asterisks  
+  
+Example:
+  
+```
+echo '$HOME *** `date`'
+```  
+versus   
+
+```
+echo "$HOME *** `date`"
+```  
+  
+More examples:  
+
+Storing the number of files in a folder to a variable:
+`NUM_FILES=$(/bin/ls | wc -l)`  
+  
+Storing PC info to a variable:  
+```
+MACHINE=$`uname -n ; uname -a`
+```  
+  
+see metacharacters for most efficient use of scripts  
+  
+### Preserving a variable value that may change in the future
+
+Just assign the present value of a variable to another variable,  
+e.g. `BALANCE="$CurBalance"`
+  
+Note how the `$` sign is used  
+  
+### Special shell positional parameters
+
+`$0, $1, §2, $n` where `$0` (see remarks above) is special and these can be  
+used as placeholders similar to Python's f-strings  
+  
+VERY COOL: `man bash` for all kinds of magic, including loops, if-statements  
+and other stuff  
+
+### Reading in parameters
+
+see example above  
+`read -p "[see above]"  
+echo "[see above"  
+
+### Parameter expansion in bash
+
+`$VAR` is shorthand for `${VAR}`  
+  
+Curly braces are used when the value of the parameter needs to be placed  
+next to other text without a space.  
+  
+Examples:  
+`${VAR:-value}` --> if variable is unset or empty, expand this to value  
+`${VAR:##pattern}` --> chop the longest match for pattern from the front of  
+var's value  
+  
+VERY COOL: see p. 157-158 for REGEX like stuff  
+
+### Performing arithmetic shell scripts
+
+Variables are normally treated as strings (i.e. text).  
+  
+Use `declare` to specify another file type.  
+  
+Use in-built `let` to let bash know that we are dealing with numbers, see  
+also: `help let`  
+  
+External options: `expr` (evaluate expressions) and `bc`, see man pages  
+  
+`let foo=$RANDOM; echo $foo`  
+  
+`let` doesn't like spaces between operands  
+`expr`, however, does  
+  
+`bc` is not that picky and accepts both most of the time  
+  
+Set the variable `I` to zero and then echo out `$((++I)) $((I++)) $((--I)) $((I--))$((-I))`  
+and see how the number is incremented or decreased  
+
+### Using programming constructs in shell scripts
+
+Evaluate conditional expressions with `test` VERY COOL: `help test`   
+See p. 159-169 for more VERY COOL, operators on p. 161  
+  
+The condition can be the output of a command.  
+  
+`-eq` works better for numbers while `=` works better with strings  
+  
+Better put strings in double quotes.  
+  
+`!=` unequal, like Python  
+  
+`if [ condition ]; then`  
+`elif`  
+`else`
+`fi`  
+  
+Double pipe: `[ condition ] || action`  
+  
+Double ampersand: `[ condition ] && action` <-- you can combine them `||` and  
+`&&` for a one-line if-then-else  
+  
+`dirname="/tmp/testdir"`  
+  
+`[ -d "$dirname" ] || mkdir "$dirname"` <-- If directory isn't there then create it.  
+
+# Continue editing here, check from p. 159 to refresh knowledge
+  
 case condition in - esac
 each case is "ended" with a double semi-colon ;;
 single pipe | means "or" within the body
