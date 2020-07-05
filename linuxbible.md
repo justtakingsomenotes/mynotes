@@ -972,8 +972,8 @@ Example script #1, taking user input:
   
 Example script #2, taking arguments and doing stuff as commented:  
   
-```#!/bin/bash`  
-# Script to echo out stuff`  
+```#!/bin/bash  
+# Script to echo out stuff  
 echo "First argument is $1, second is $2."  
 echo "The command itself is $0."  
 echo "The number of parameters is $#."  
