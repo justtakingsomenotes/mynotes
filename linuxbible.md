@@ -941,22 +941,55 @@ for useful guides, including:
 ## Ch 7 Writing simple shell scripts
 
 Complex shell scripts are slower than compiled programs, consider scripting  
-with Python.  
+with Python. Options may be specified and everything after the options is  
+referred to as command-line argument.  
   
-To run a script:  
+To run a script (example script below):  
   
-- use filename as an argument, e.g. `bash [filename]` OR  
+- Use filename as an argument, e.g. `bash [filename]`, stolen from  
+`man bash`, "Arguments" section: `bash`assumes that [filename] above is the  
+1st argument, being set to `$0` and that [filename] contains Shell commands.  
+Successful comman execution or executing no command at all results in  
+`exit status 0`. Bash tries to open [filename] in the $PWD. If the file is not  
+there, Bash follows along the $PATH.
   
-- have the name of the interpreter in the first line of the script preceded  
+OR  
+  
+- Have the name of the interpreter in the first line of the script preceded  
 with the shebang characters aka `#!` (e.g. `#!/bin/bash`) with the script  
 being executable, using `chmod +x [filename]`  
   
-- stolen from German "shebank" wikipedia page: `#!/usr/bin/env python` would  
+- Stolen from German "shebang" wikipedia page: `#!/usr/bin/env python` would  
 use the machine's local environment, i.e. $PATH to find out where Python can  
-be found on the local machine. 
+be found on the local machine. This is useful when the script is supposed to  
+run on different machines with a different folder structure.  
   
-options may be specified and everything after the options is referred to as  
-command-line argument  
+Example script #1, taking user input:  
+  
+`#!/bin/bash`  
+`read -p "Type three things: " var1 var2 var3`  
+`echo "Here is what you typed: $var1 $var2 and finally $var3"`  
+  
+Example script #2, taking arguments and doing stuff as commented:  
+  
+`#!/bin/bash`  
+`# Script to echo out stuff`  
+`echo "First argument is $1, second is $2."`  
+`echo "The command itself is $0."`  
+`echo "The number of parameters is $#."`  
+`echo "All arguments given were $@."`  
+`DATESET=$\`date\``  
+`sleep 5`  
+`DATEREAD=$(date)`  
+`echo $DATEREAD #5 seconds more because of sleep and the brackets`  
+`echo $DATESET #this date and time is set when $DATESET is defined because of the backticks`  
+`echo -e "The exit status of the last command executed was $?`  
+`where zero means that said command was executed succesfully and`  
+`anything other than zero means something went wrong, see bash man page.`  
+`Newlines can be made using echo with the -e parameter and n with`  
+`a backslash in front."`  
+  
+  
 # Bible p. 153, do update script, continue formatting here
 # for comments in the script
 echo - place an echo with quotes at the beginning of lines within a body of a loop to see what's going on, no permanent changes are made that way
