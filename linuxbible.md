@@ -972,7 +972,8 @@ Example script #1, taking user input:
   
 Example script #2, taking arguments and doing stuff as commented:  
   
-```#!/bin/bash  
+```
+#!/bin/bash  
 # Script to echo out stuff  
 echo "First argument is $1, second is $2."  
 echo "The command itself is $0."  
@@ -987,7 +988,8 @@ echo -e "The exit status of the last command executed was $?
 where zero means that said command was executed succesfully and  
 anything other than zero means something went wrong, see bash man page.  
 Newlines can be made using echo with the -e parameter and n with  
-a backslash in front."```  
+a backslash in front."  
+```  
   
   
 # Bible p. 153, do update script, continue formatting here
