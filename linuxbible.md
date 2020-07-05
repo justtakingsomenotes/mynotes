@@ -4,7 +4,10 @@ Note to beginner self: `vim` not good for mental health, use `nano` instead.
 Use `vimtutor` when you start writing lots of stuff because once you get `vim`,  
 it is actually useful.  
 Additional note to self: Linux Bible is about fedora but most stuff works in  
-Ubuntu as well.
+Ubuntu as well. Identifying the  differences between the distributions helps  
+to understand Linux.
+  
+Find your mouse with `xeyes`
 
 ## Ch1 and Ch2
 
@@ -267,13 +270,18 @@ Example that could be added in .bashrc: `alias mypass="cat /etc/passwd"`
 
 Check Linux Bible on p. 88 for bash configuration files:  
 `/etc/profile`  
+  
 `/etc/bashrc`  
-`~/.bash_profile` is a  good place to add environment variables because, once  
+  
+`~/.bash_profile` is a good place to add environment variables because, once  
 set, they are inherited by future shells. Note to self: Flask environmental  
 variables here?  
+  
 `~/.bashrc` a good place to add aliases or user specific prompts, see p. 90 of  
 the Linux Bible. This is read in each time you open a new shell.  
+  
 `~/.bash_logout`  
+  
 `source` What does the `source` command do? Read and execute commands from  
 arguments provided after 'source' in the current shell environment, example:  
 `source $HOME/.bashrc`  
@@ -344,7 +352,7 @@ via `info` than via `man`
 Check "VI and VIM" section. The search options there also apply to man pages  
 and enable you to search man pages effectively: `/`, `?`, `n` and `N`.
   
-There are 8 manual page sections:  
+There are 8 MAN PAGE SECTIONS:  
   
 1. user commands
 2. system calls (interesting for programmers)
@@ -821,90 +829,135 @@ looking like `[3] 12345` where `[job number] [PID of what's in front of &]`.
 Then the program is started outside the terminal without blocking it.  
 Not using `&` would (normally) block the terminal until the program is closed.  
   
-# Continue formatting here
-"at" let's you schedule processes (see man pages, tons of options)
-jobs = show commands running in the background, +/- signs mean that the process has been placed to the fore-/background most recently respectively
-all jobs requiring terminal input cannot run in the background and are therefore stopped when until put back to the foreground again
-jobs -l also shows the PID which can be used to further investigate the job with ps
-fg %1 gets job number 1 back to the foreground; if job1 was vim, then it was "frozen" before and comes back as it was
-fg %some_string also works, but needs to be unambiguous
-fg %?some_string see above but the job only needs to contain the string, not match exactly
-bg %1 for running jobs in the background
-Killing and renicing processes
-kill and killall commands, see p. 147 and man pages
-Actually, those commands send SIGNALS to the PID (e.g. end, pause, reread config files, etc...):
-Signal
-number
-description, see also: man 7 signal
-SIGHUP
-1
-hang-up detected, either on controlling terminal or death of controlling process (re-read configuration, usefull for PIDs running on a server when config has changed)
-SIGINT
-2
-interrupt from keyboard
-SIGQUIT
-3
-quit from keyboard
-SIGABRT
-6
-abort signal from abort(3)
-SIGKILL
-9
-kill signal (no clean kill, cannot be blocked by process)
-SIGTERM
-15
-termination signal (clean kill, default)
-SIGCONT
-19,18,25
-continue if stopped
-SIGSTOP
-17,19,23
-stop process (cannot be blocked by process)
-Three numbers? First one is for Alpha and Sparc CPU architectures, middle for x86 and PowerPC, last for MIPS.
-Examples:
-kill 10432 (this is the default which does the same as next line)
-kill -15 10432
-kill SIGTERM 10432
-killall uses names instead of PIDs
-killall bash kills all bash (careful, you may not want to kill all processes with the same name)
-Setting processor priority with nice and renice (these do not apply to child processes)
-nice values: -20 to 19 (already mentioned above), default is 0, the more negative the more priority
-regular users can't set a negative value and can only give lower priority, never higher priority
-renice for running processes
-nice for starting processes with a given priority
-Examples:
-nice +5 updatedb &
-renice -n -5 20284 (-n is the same as --priority, see man pages)
-Limiting processes with cgroups aka control groups
-Cgroups can be used to identify a process as a task, belonging to a specific control group.
-Tasks can be set up in a hierarchy. Limitations are inherited down the hierarchy.
-Limitations to be set include (see p. 150):
-- Storage (blkio)
-- Processor scheduling (cpu)
-- Process accounting (cpuacct, reports in CPU usage)
-- CPU assignment (cpuset)
-- Device access (devices)
-- Suspend/resume (freezer)
-- Memory usage (memory)
-- Network bandwidth (net_cls)
-- Network traffic (net_prio)
-- Name spaces (ns, a cgroup can only "see" things within the name space)
-cgreate command: create cgroup
-relevant files/directories:
-- /etc/cgconfig.conf
-- /etc//etc/cgrules.conf
-- /sys/fs/cgroup
-see p. 151 for useful guides:
-- RHEL Resource Management and Linux Containers
-- Kernel documentation on cgroups
-xeyes & is fun
-Chapter 7 Writing simple shell scripts
-see ~/bin/myscript to check out my cool training script
-Complex shell scripts are slower than compiled programs.
-To run a script:
-- use filename as an argument, e.g. bash filename or
-- have the name of the interpreter in the first line of the script preceded with #! (e.g. #!/bin/bash) with the script being executable (using chmod +x filename)
-options may be specified and everything after the options is referred to as command-line argument
+`at` let's you schedule processes (see man pages, tons of options)  
+`at` is useful in principle but seems to require lots of set up work, see  
+[this comment](https://stackoverflow.com/a/10468304) in Stackoverflow for more  
+information. Note to self: check `man cron`. Everyone is talking about `cron`.  
+  
+`jobs` = show commands running in the background, +/- signs mean that the  
+process has been placed to the foreground/background most recently respectively  
+  
+all jobs requiring terminal input cannot run in the background and are  
+therefore stopped until put back to the foreground again  
+  
+`jobs -l` also shows the PID which can be used to further investigate the  
+job with `ps`  
+  
+`fg %1` gets job number 1 back to the foreground; if job1 was `vim`, then it  
+was "frozen" before and comes back as it was, see comment on jobs requiring  
+terminal input above  
+  
+`fg %some_string` also works, but needs to be unambiguous  
+  
+`fg %?some_string` see above but the job only needs to contain the string,  
+not match exactly  
+  
+`bg %1` for running jobs in the background  
+
+### Killing and renicing processes
+
+`kill` and `killall` commands, see p. 147 and man pages  
+  
+Actually, those commands send SIGNALS to the PID (e.g. end, pause,  
+reread config files, etc...):  
+  
+`man 7 signal` shows all information on signals including a complete looking  
+table about the signals, their number and description.  
+  
+Signal - number - description, see also: `man 7 signal`  
+  
+SIGHUP - 1 - hang-up detected, either on controlling terminal or death of  
+controlling process (re-read configuration, usefull for PIDs running on a  
+server when config has changed)  
+  
+SIGINT - 2 - interrupt from keyboard  
+  
+SIGQUIT - 3 - quit from keyboard  
+  
+SIGABRT - 6 - abort signal from abort(3)  
+  
+SIGKILL - 9 - kill signal (no clean kill, cannot be blocked by process)  
+  
+SIGTERM - 15 - termination signal (clean kill, default)  
+  
+SIGCONT - 19,18,25 - continue if stopped  
+  
+SIGSTOP - 17,19,23 - stop process (cannot be blocked by process)  
+Three numbers? First one is for Alpha and Sparc CPU architectures, middle  
+for x86 and PowerPC, last for MIPS.  
+  
+Examples:  
+  
+`kill 10432` (this is the default which does the same as next line)  
+`kill -15 10432` = `kill SIGTERM 10432`  
+
+`killall` uses names instead of PIDs  
+`killall bash` kills all bash (CAREFUL, you may not want to kill all  
+processes with the same name)  
+
+### Setting processor priority with nice and renice (these do not apply to child processes)
+
+nice values: -20 to 19 (already mentioned above), default is 0, the more  
+negative the more priority  
+  
+regular users can't set a negative value and can only give lower priority,  
+never higher priority  
+  
+`renice` for running processes, `nice` for starting processes with a given priority  
+  
+Examples:  
+  
+`nice +5 updatedb &`  
+`renice -n -5 20284` -n is the same as --priority, see man pages  
+
+### Limiting processes with cgroups aka control groups
+
+Cgroups can be used to identify a process as a task, belonging to a  
+specific control group.  
+Tasks can be set up in a hierarchy. Limitations are inherited down the  
+hierarchy. Limitations to be set include (see p. 150):  
+  
+- Storage (blkio)  
+- Processor scheduling (cpu)  
+- Process accounting (cpuacct, reports in CPU usage)  
+- CPU assignment (cpuset)  
+- Device access (devices)  
+- Suspend/resume (freezer)  
+- Memory usage (memory)  
+- Network bandwidth (net_cls)  
+- Network traffic (net_prio)  
+- Name spaces (ns, a cgroup can only "see" things within the name space)  
+  
+`cgcreate` command: create cgroup  
+  
+relevant files/directories:  
+`/etc/cgconfig.conf`, `/etc//etc/cgrules.conf`, `/sys/fs/cgroup`; see p. 151  
+for useful guides, including:  
+1. RHEL Resource Management and Linux Containers  
+2. Kernel documentation on cgroups  
+  
+`xeyes &` is fun
+
+## Ch 7 Writing simple shell scripts
+
+Complex shell scripts are slower than compiled programs, consider scripting  
+with Python.  
+  
+To run a script:  
+  
+- use filename as an argument, e.g. `bash [filename]` OR  
+  
+- have the name of the interpreter in the first line of the script preceded  
+with the shebang characters aka `#!` (e.g. `#!/bin/bash`) with the script  
+being executable, using `chmod +x [filename]`  
+  
+- stolen from German "shebank" wikipedia page: `#!/usr/bin/env python` would  
+use the machine's local environment, i.e. $PATH to find out where Python can  
+be found on the local machine. 
+  
+options may be specified and everything after the options is referred to as  
+command-line argument  
+# Bible p. 153, do update script, continue formatting here
 # for comments in the script
 echo - place an echo with quotes at the beginning of lines within a body of a loop to see what's going on, no permanent changes are made that way
 use dummy echo statements everywhere to check whether the correct logic branch is being taken
