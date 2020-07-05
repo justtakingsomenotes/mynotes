@@ -972,22 +972,22 @@ Example script #1, taking user input:
   
 Example script #2, taking arguments and doing stuff as commented:  
   
-`#!/bin/bash`  
-`# Script to echo out stuff`  
-`echo "First argument is $1, second is $2."`  
-`echo "The command itself is $0."`  
-`echo "The number of parameters is $#."`  
-`echo "All arguments given were $@."`  
-`DATESET=$\`date\``  
-`sleep 5`  
-`DATEREAD=$(date)`  
-`echo $DATEREAD #5 seconds more because of sleep and the brackets`  
-`echo $DATESET #this date and time is set when $DATESET is defined because of the backticks`  
-`echo -e "The exit status of the last command executed was $?`  
-`where zero means that said command was executed succesfully and`  
-`anything other than zero means something went wrong, see bash man page.`  
-`Newlines can be made using echo with the -e parameter and n with`  
-`a backslash in front."`  
+```#!/bin/bash`  
+# Script to echo out stuff`  
+echo "First argument is $1, second is $2."  
+echo "The command itself is $0."  
+echo "The number of parameters is $#."  
+echo "All arguments given were $@."  
+DATESET=$`date`  
+sleep 5  
+DATEREAD=$(date)  
+echo $DATEREAD #5 seconds more because of sleep and the brackets  
+echo $DATESET #this date and time is set when $DATESET is defined because of the backticks  
+echo -e "The exit status of the last command executed was $?  
+where zero means that said command was executed succesfully and  
+anything other than zero means something went wrong, see bash man page.  
+Newlines can be made using echo with the -e parameter and n with  
+a backslash in front."```  
   
   
 # Bible p. 153, do update script, continue formatting here
