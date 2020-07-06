@@ -1324,9 +1324,13 @@ Script:
 ```
 #!/bin/bash  
 # This script sets the environment variables for the Flask tutorial  
-echo "\n I'm setting the necessary environment variables for the Flask\n  
-tutorial for you. Flask development server now starting...Stop it with CTRL+C."  
-export FLASK_APP=flaskr ; export FLASK_ENV=development ; export FLASK_DEBUG=1  
+source venv/bin/activate  
+echo "Just started the Python virtual environment"  
+export FLASK_APP=flaskr  
+export FLASK_ENV=development  
+export FLASK_DEBUG=1  
+echo "Set the environment variables for the Flask tutorial for you."  
+echo "I'm now starting the development server. Stop it with CTRL+C."  
 flask run  
 ```
   
