@@ -1311,15 +1311,25 @@ sudo apt-get --assume-yes update # could also be -y or --yes, see man pages
 sudo apt-get -y upgrade  
 sudo apt-get -y dist-upgrade  
 sudo apt-get -y autoremove  
-echo "/nI did sudo apt-get update, upgrade, dist-upgrade and autoremove for you"  
+echo "\nI did sudo apt-get update, upgrade, dist-upgrade and autoremove for you"  
 ```  
   
 Save that in a file, copy that file to `~/.local/bin` since this is already in  
 the $PATH. Then give change permissions in order to execute. Lazy solution:  
-`sudo chmod --reference=[old_script_with_correct_permissions]  [new_script_that_needs_permissions_changed`  
+`sudo chmod --reference=old_script_with_correct_permissions  new_script_that_needs_permissions_changed`    
 
+#### My own second script - making getting back to the Flask tutorial less annoying without fiddling with .bashrc
 
-
+Script:  
+```
+#!/bin/bash  
+# This script sets the environment variables for the Flask tutorial  
+echo "\n I'm setting the necessary environment variables for the Flask\n  
+tutorial for you. Flask development server now starting...Stop it with CTRL+C."  
+export FLASK_APP=flaskr ; export FLASK_ENV=development ; export FLASK_DEBUG=1  
+flask run  
+```
+  
 ## Ch 8 Becoming a Linux System Administrator
 
 Most fedora and RHEL graphical config tools start with `system-config-`, for example:  
