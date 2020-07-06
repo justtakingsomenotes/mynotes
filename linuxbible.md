@@ -25,7 +25,7 @@ continue in a new line with a secondary prompt called PS2.
 `find /home/an/extraordinarily/long/path/ -type f -iname '*.jpg*' \`  
 `>&& continue command here`  
     
-`CTRL+ALT+F1-F6` switch between consoles  
+`CTRL+ALT+F1-F6` switch between consoles, does not work in Ubuntu by default  
   
 who am i / whoami: display username  
   
@@ -1320,5 +1320,74 @@ the $PATH. Then give change permissions in order to execute. Lazy solution:
 
 
 
-## Ch 8 Becoming a Linuy System Administrator
+## Ch 8 Becoming a Linux System Administrator
+
+Most fedora and RHEL graphical config tools start with `system-config-`, for example:  
+`system-config-network`  
+  
+The following seems to be fedora / RHEL only:  
+- `system-config-bind` configure a Domain Name System
+- `system-config-httpd` computer as Apache server
+- `system-config-nfs` share folder using NFS
+- `system-config-rootpassword` does what is says
+- `system-config-samba` Windows (SMB) file sharing
+- `system-config-services` configure which services are running at different runlevels
+- `authconfig-gtk` how are users authenticated on the system?
+- `system-config-date` obvious
+- `system-config-firewall` obvious
+- `system-config-language` obvious
+- `system-config-printer` obvious
+- `policycoreutils-gui` Set SELinux enforcing modes and default policy
+- `system-config-users` obvious
+- `gconf-editor` edit GNOME configuration database, also for Ubuntu
+- `gnome-utils` display info about hard disks and removable storage
+- `gnome-disks` partitions and filesystems
+- `system-config-kickstart` install multiple Linux systems without user  
+interaction, also for Ubuntu, VERY COOL
+  
+#### Brower-based tools
+
+- [OpenStack](https://www.openstack.org/)
+- Red Hat Enterprise Virtualization
+
+### Using the root user account
+
+root user's home folder: `/root`  
+The /etc/passwd file contains information about root's home directory and other  
+information associated with root  
+
+`cat /etc/passwd` shows the following for root:  
+`root:x:0:0:root:/root:/bin/bash` where  
+user:?:user set to 0: group set to 0:?:home directory of user:shell for user  
+Note to self: investigate question marks above.  
+You can change `/etc/passwd` but `usermod` command is a better choice for  
+doing this, see Ch 11 and man pages  
+  
+Ubuntu does not have a root password set, forcing you to use `sudo` every time.  
+  
+`su` itself does not read in the root user's environment. To achieve this, use  
+`su -`, this way, for instance, `cd ~` leads to the root user's home, not the  
+user's home who needs root privileges. Note to self: test your assumption when  
+on a fedora system  
+  
+`su - otheruser` become otheruser  
+  
+`exit` = `CTRL+D` = return to non-root shell  
+
+### Gaining administrative access with sudo
+
+check `man sudoers`  
+  
+Simply add a user to `/etc/sudoers` and define what privilege the user should  
+get. Ubuntu: "This file MUST be edited with the `visudo` command as root".  
+  
+Therefore, use `visudo`, see also man pages of `vipw` and `vigr`  
+  
+Note: `visudo` will open the default text editor as defined in the $EDITOR  
+variable. For some reason, this variable is not defined in Ubuntu but the  
+default editor is `nano`. Note to self: check on fedora system with  
+`printenv | grep EDITOR` and `printenv | grep VISUAL`  
+
+## Exploring adminstrative commands, configuration files, and log files
+
 
