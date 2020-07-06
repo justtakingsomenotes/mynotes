@@ -1126,7 +1126,7 @@ Better put strings in double quotes.
   
 `if [ condition ]; then`  
 `elif`  
-`else`
+`else`  
 `fi`  
   
 Double pipe: `[ condition ] || action`  
@@ -1137,78 +1137,188 @@ Double ampersand: `[ condition ] && action` <-- you can combine them `||` and
 `dirname="/tmp/testdir"`  
   
 `[ -d "$dirname" ] || mkdir "$dirname"` <-- If directory isn't there then create it.  
-
-# Continue editing here, check from p. 159 to refresh knowledge
   
-case condition in - esac
-each case is "ended" with a double semi-colon ;;
-single pipe | means "or" within the body
-weird syntax *)
-for thing in list - do - done
-for N in 0 1 2 3
-do
-echo The number is $N
-done
-oder:
-for FILE in `/bin/ls` #that's the location of the ls command which creates a list of the $PWD
-do
-echo $FILE
-done
-You can use C syntax as well...which will never happen as long as I'm alive
-while-condition-do-done #does stuff while the condition is true
-until-condition-do-done #does stuff until the condition is true, i.e. while it is false
-Trying some useful text manipulation programs
-grep cut tr awk sed
-General RegEx Parser
-Stream EDitor
-env | grep ^HO #which env variables start with HO?
-grep /home /etc/passwd | cut -d':' -f6 - #6th field, delimiter is a colon : and the hyphen (-) tells cut to read from STDIN (from the pipe)
-tr means "translate" or rather search&replace, see man pages
-FOO="MiXeD"
-echo $FOO | tr [A-Z] [a-z]
-tr [:blank:] [_] #replace blanks with underscores
-for sed, check online documentation (e.g. it can remove lines which contain a certain pattern), also: weird syntax alert
-other example: cat somefile.txt | sed 's/Mac/Linux/g' > fixed_file.txt
-Using simple shell scripts - phone list example
-tape backup script on p. 168
+`case` condition ends in `esac`  
+  
+each `case` is "ended" with a double semi-colon `;;`  
+  
+single pipe `|` means "or" within the body  
+  
+weird syntax for catchall backup condition: ` *)`  
+  
+Example from p. 163:  
+  
+```  
+case `date +%a` in # when the date output has...  
+    "Mon") # ..."Mon" in it...  
+        BACKUP=/home/myproject/data0 # ...then backup this...  
+        TAPE=/dev/rft0 # ...using this (tape?) device.  
+        ;; # First case is ended with two semi-colons  
+    "Tue" | "Thu") # second case uses the OR operator |  
+        BACKUP=/home/myproject/data1 # Different date...  
+        TAPE=/dev/rft1 # ...different (tape?) device.  
+        ;;  
+    *) # catchall placeholder since backups are only made Mon and Tue  
+        BACKUP="none" # The string "none"...  
+        TAPE=/dev/null # ...is sent to Linux Nirvana  
+        ;;  
+esac # ends the case command, "esac" is reversed "case"   
+```  
+  
+for...do loop example:  
+  
+```
+for N in 0 1 2 3  
+do  
+echo The number is $N  
+done  
+```
+  
+Another example:  
+```
+for FILE in `/bin/ls` #that's the location of the ls command which creates a list of the $PWD  
+do  
+echo $FILE  
+done  
+```
+  
+You can use C syntax as well...which I should learn first before attempting this.  
+  
+while...do loop example:  
+  
+```
+N=0  # below, note the space after and before the brackets  
+while [ $ N -lt 10 ] ; do # -lt = less than, check table on p. 161  
+    echo -n $N # no trailing newline using -n  
+    let N=$N+1 # note the use of in-built let command, see also "help let" in bash  
+done  
+```  
+  
+until...do loop example, same output as above:  
+  
+```
+N=0  
+until [ $ N -eq 10 ] ; do # -eq = equal operator, see p. 161  
+    echo -n $N  
+    let N=$N+1  
+done  
+```  
+
+### Trying some useful text manipulation programs
+
+`grep`, `cut`, `tr`, `awk` and `sed`  
+  
+grep = General RegEx Parser  
+sed = Stream EDitor  
+  
+`env | grep ^HO` which env variables start with HO?  
+  
+`grep /home /etc/passwd | cut -d':' -f6 -` 6th field, delimiter is a colon `:`  
+and the hyphen `-` tells `cut` to read from STDIN (from the pipe)  
+  
+tr =  "translate" or rather search&replace, see man pages  
+  
+`tr` example:  
+    
+```
+FOO="MiXeD"  
+echo $FOO | tr [A-Z] [a-z]  
+```  
+  
+`tr [:blank:] [_]` #replace blanks with underscores  
+  
+For `sed`, check online documentation. It can remove lines which contain a  
+certain pattern), also: weird syntax alert.  
+  
+`sed` example: `cat somefile.txt | sed 's/Mac/Linux/g' > fixed_file.txt`  
+
+### Using simple shell scripts - phone list example
+
+```
+#!/bin/bash  
+# (@)/ph  
+# A very simple telephone list  
+# Type "ph new name number" to add to the list, or  
+# just type "ph name" to get a phone number  
+  
+PHONELIST=~/.phonelist.txt  
+  
+# If no command line parameters ($#), there  
+# is a problem, so ask what they're talking about.  
+if [ $# -lt 1 ] ; then  
+        echo "Whose phone number did you want? "  
+         exit 1  
+fi  
+  
+# Did you want to add a new phone number?  
+if [ $1 = "new" ] ; then  
+        shift  
+	echo $* >> $PHONELIST  
+        echo $* >> added to database  
+        exit 0  
+fi  
+  
+# Nope. But does the file have anything in it yet?  
+# This might be our first time using it, after all.  
+if [ ! -s $PHONELIST] ; then  
+        echo "No names in the phone list yet! "  
+        exit 1  
+else  
+    	grep -i -q "$*" $PHONELIST      # Quietly search the file  
+        if [ $? -ne 0 ] ; then          # Did we find anything?  
+         echo "Sorry, that name was not found in the phone list"  
+         exit 1  
+        else  
+         grep -i "$*" $PHONELIST  
+        fi  
+fi  
+exit 0  
+```  
+  
+see also: info bash  
+  
+Backup script example:  
+```
+#!/bin/bash  
+# (@)/my_backup  
+# A simple backup script  
+#  
+  
+# Change the TAPE device to match your system.  
+# Check /var/log/messages to determine your tape device.  
+# You may also need to add scsi-type support to your kernel.  
+# Not sure if I really need to do this nowadays?  
+TAPE=/dev/rft0  
+  
+# Rewind the tape device $TAPE  
+mt $TAPE rew  
+' Get a list of home directories  
+HOMES=`grep /home /etc/passwd | cut -f6 -d':'` # see previous examples for stuff after the pipe  
+# Back up the data in those directories  
+tar cvf $TAPE $HOMES  
+# Rewind and eject the tape.  
+mt $TAPE rewoffl  
+```
+
+#### My own first script - Ubuntu Linux update script
+
+Script:  
+```
 #!/bin/bash
-# (@)/ph
-# A very simple telephone list
-# Type "ph new name number" to add to the list, or
-# just type "ph name" to get a phone number
+# This script does update Ubuntu and finish up with autoremove
 
-PHONELIST=~/.phonelist.txt
+sudo apt-get --assume-yes update # could also be -y or --yes, see man pages  
+sudo apt-get -y upgrade  
+sudo apt-get -y dist-upgrade  
+sudo apt-get -y autoremove  
+echo "/nI did sudo apt-get update, upgrade, dist-upgrade and autoremove for you"  
+```  
+  
+Save that in a file, copy that file to `~/.local/bin` since this is already in  
+the $PATH. Then give change permissions in order to execute. Lazy solution:  
+`sudo chmod --reference=[old_script_with_correct_permissions]  [new_script_that_needs_permissions_changed`  
 
-# If no command line parameters ($#), there
-# is a problem, so ask what they're talking about.
-if [ $# -lt 1 ] ; then
-        echo "Whose phone number did you want? "
-         exit 1
-fi
 
-# Did you want to add a new phone number?
-if [ $1 = "new" ] ; then
-        shift
-	echo $* >> $PHONELIST
-        echo $* >> added to database
-        exit 0
-fi
 
-# Nope. But does the file have anything in it yet?
-# This might be our first time using it, after all.
-if [ ! -s $PHONELIST] ; then
-        echo "No names in the phone list yet! "
-        exit 1
-else
-    	grep -i -q "$*" $PHONELIST      # Quietly search the file
-        if [ $? -ne 0 ] ; then          # Did we find anything?
-         echo "Sorry, that name was not found in the phone list"
-         exit 1
-        else
-         grep -i "$*" $PHONELIST
-        fi
-fi
-exit 0
-see also: info bash
+## Ch 8 Becoming a Linuy System Administrator
 
-Chapter 8
