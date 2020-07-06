@@ -1315,7 +1315,7 @@ echo "\nI did sudo apt-get update, upgrade, dist-upgrade and autoremove for you"
 ```  
   
 Save that in a file, copy that file to `~/.local/bin` since this is already in  
-the $PATH. Then give change permissions in order to execute. Lazy solution:  
+the $PATH. Then change permissions in order to execute. Lazy solution:  
 `sudo chmod --reference=old_script_with_correct_permissions  new_script_that_needs_permissions_changed`    
 
 #### My own second script - making getting back to the Flask tutorial less annoying without fiddling with .bashrc
