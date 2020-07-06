@@ -1326,7 +1326,8 @@ Script:
 # This script sets the environment variables for the Flask tutorial  
 echo "DID YOU START THE PYTHON VIRTUAL ENVIRONMENT USING"  
 echo "source ./venv/bin/activate ???"  
-echo "Check your prompt for (venv) or whatever you called your virtual environm$  
+echo "Check your prompt for (venv) or whatever you called your virtual"
+echo "environment!"  
 export FLASK_APP=flaskr  
 export FLASK_ENV=development  
 export FLASK_DEBUG=1  
