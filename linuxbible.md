@@ -1550,9 +1550,12 @@ loaded into the running kernel using `modprobe`. Modules loaded this way
 disappear after the next reboot. Consider adding `modprobe` stuff to startup  
 scripts.  
 
-`modprobe -r` unloads a module and its dependent modules
+`modprobe -r` unloads a module and its dependent modules  
 `rmmod` also removes modules from the running kernel, however, you may have  
 to kill processes using the module first  
-  
+
+## Installing Linux
+
+continue here
 
 
