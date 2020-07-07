@@ -1,6 +1,7 @@
 # Linux Bible
 
 Note to beginner self: `vim` not good for mental health, use `nano` instead.  
+`ALT+#` shows line numbers in `nano`.  
 Use `vimtutor` when you start writing lots of stuff because once you get `vim`,  
 it is actually useful.  
 Additional note to self: Linux Bible is about fedora but most stuff works in  
@@ -1405,5 +1406,76 @@ default editor is `nano`. Note to self: check on fedora system with
 `printenv | grep EDITOR` and `printenv | grep VISUAL`  
 
 ## Exploring adminstrative commands, configuration files, and log files
+
+`sshd`, `pppd` and `cupsd` have the d in common. `d` stands for daemon which  
+runs in the background, waiting for service requests.  
+  
+### Administrative commands  
+  
+`/sbin` and `/usr/sbin` traditionally include commands for the root user. To  
+this day, Ubuntu adopted this approach whereas fedora and RHEL just use the  
+`/usr/sbin` directory which is added to root's and all other users'  PATH.  
+However, it is symbollically linked to `/sbin`.  
+  
+Some administrative commands are stored in `/bin` and `/usr/bin`, especially  
+when the respective command has options that are supposed to be accessible by  
+everyone such as `/bin/mount` where listing filesystems is accessible to  
+everyone but mounting filesystem is traditionally not.  
+  
+Section 8 man pages are stored in `/usr/share/man/man8`, see also  
+MAN PAGE SECTIONS above.  
+  
+Other relevant folders, especially when third party applications are concerned:  
+- /usr/local/bin
+- /usr/local/sbin
+- /opt/bin
+
+### Administrative configuration files
+
+These are usually plaintext files.  
+Good: any text editor will do
+Bad: no error checking, you need to run the program relying on that config file  
+in order to find out if you edited it right or not  
+  
+Each configuration file may have its own structure, some use XML, many do not.  
+A `,` or a `;` or another character at the wrong place may cause lots of  
+trouble.  
+  
+Sometimes configuration file sanity checks are available. Examples:  
+`testparm` for `smb.conf` (Samba).  
+`httpd -t` where the `-t` option provides an error check before you start your  
+Apache server.  
+  
+`vim` sometimes recognises configuration files and then applies a certain  
+color scheme  
+  
+personal configuration files are in `/home`, usually hidden `.` dot files  
+system-wide configuration files are in `/etc`  
+  
+Some useful configuration files and folders on pp. 184-187, potentially all VERY COOL.  
+(Note to self: check those files to refine your scripting skills)  
+
+Personal best of in terms of "looks interesting", differences Ubuntu vs  
+fedora apply:  
+- have a look at `cd /etc ; ls|grep cron` for cron jobs, VERY COOL  
+- `/etc/default` when you run `useradd` this folder will be checked for default  
+values for user creation; side note: `/etc/skel` is the skeleton directory, use  
+a similiar approach for flask projects?  
+- the security folder, e.g. `cd /etc/security | cat pwquality.conf`  
+- `/etc/sys*`  
+- for fedora and RHEL only: `/etc/sysconfig`  
+- `hosts.allow` and `hosts.deny`  
+- `hosts`, `resolv.conf` and `hostname`  
+- `/etc/systemd`, outdated: `inittab` which defined which programs start or  
+stop when Linux boots  
+- `mtab` which filesystem is mounted?  
+- `nsswitch.conf` for identifying where critical systems information comes  
+from  
+- `passwd` user information, see also remarks above about this file  
+- `protocols` all the internet services  
+- `services` port assignments for TCP/IP and UDP  
+- `sudoers` see also remarks above  
+
+### Administrative log files and systemd journal
 
 
