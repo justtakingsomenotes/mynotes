@@ -1478,4 +1478,24 @@ from
 
 ### Administrative log files and systemd journal
 
+Non-systemd systems: `rsyslogd`, old: `syslogd`  
+systemd systems: `journalctl`, the systemdjournal  
+  
+Something went wrong or doesn't work? Check the above.  
+Intruder alert? Check the above.  
+  
+`man journalctl` VERY COOL  
+  
+`journalctl` takes a while  
+  
+`journalctl _SYSTEMD_UNIT=serviceyouareinterestedin`  
+  
+For `rsyslogd` and `syslogd`:  
+  
+- Log configuration: `/etc/rsyslog.conf`  
+- Messages are typically directed to files in `/var/log` or log servers  
+- common log files: `boot.log`, `messages`, `secure`  
+  
+### Using other administrative accounts
+
 
