@@ -1498,4 +1498,61 @@ For `rsyslogd` and `syslogd`:
   
 ### Using other administrative accounts
 
+Even though administrative logins are availabe, they are usually disabled by  
+default. The accounts are primarily maintained to provide ownership for  
+files and processes associated with particular services. This enhances  
+security.  
+  
+`apache` is a user associated with `httpd` in fedora. The Ubuntu `equivalent`  
+would be `www.data`.  
+  
+Other examples: `avahi` for `zeroconf` networking, `rpc` runs the remote  
+procedure calls daemon `rpcbind` for receiving calls for services on the  
+host system.  
+  
+Logging in with these users is typically prevented by setting their default  
+Shell to `/sbin/nologin/` or `/bin/false`.  
+
+### Checking and configuring hardware
+
+`udev` dynamically names and creates devices as hardware comes and goes, using  
+the `udevd` daemon  
+  
+HAL (hardware abstraction layer) passes information about hardware changes  
+to user space  
+  
+When the system boots the kernel detects hardware and loads drivers. If the  
+automatic behaviour is not what you want you can change it.  
+  
+Any user can run `dmesg` to view kernel boot messages after Linux comes up.  
+  
+`dmesg` often also includes what happened harware-wise after booting. If not,  
+kernel messages can often be checked with `tail -f /var/log/messages` or  
+`journalctl -c`. Plug in a USB device and check what happens.  
+  
+see example `dmesg` output on p. 192  
+  
+`lspci` for PCI buses  
+`lsusb` for USB...`lscpu`...you get the idea  
+  
+On fedora USB drives are auto-mounted to `/run/media/[username]` check if  
+this is true  
+  
+Try hardware modules of something is not properly detected.  
+Kernel modules are installed in `/lib/modules`  
+  
+`lsmod` shows which modules are loaded into the running kernel, example  
+output: `e1000e`. Use `/sbin/modinfo -d e1000e` to get more information, output:  
+`Intel(R) PRO/1000 Network Driver`. Check `-a` and `-n` options.  
+  
+Every module that has been compiled and installed in `/lib/modules` can be  
+loaded into the running kernel using `modprobe`. Modules loaded this way  
+disappear after the next reboot. Consider adding `modprobe` stuff to startup  
+scripts.  
+
+`modprobe -r` unloads a module and its dependent modules
+`rmmod` also removes modules from the running kernel, however, you may have  
+to kill processes using the module first  
+  
+
 
