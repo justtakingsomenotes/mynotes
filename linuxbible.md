@@ -1339,6 +1339,12 @@ echo "I'm now starting the development server. Stop it with CTRL+C."
 flask run  
 ```
   
+Note: when you start a script, a subshell is created. The (flask) environment  
+variables are contained in this subshell and they are gone when the script  
+finishes executing (usually after you pressed CTRL+C). This information is  
+from [here](http://litux.nl/Reference/books/7213/ddu0076.html) and looks  
+worthy of being investigated further.  
+
 ## Ch 8 Becoming a Linux System Administrator
 
 Most fedora and RHEL graphical config tools start with `system-config-`, for example:  
@@ -1366,6 +1372,7 @@ interaction, also for Ubuntu, VERY COOL
   
 #### Brower-based tools
 
+- [Cockpit](https://cockpit-project.org/) VERY COOL, use Cockpit!
 - [OpenStack](https://www.openstack.org/)
 - Red Hat Enterprise Virtualization
 
