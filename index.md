@@ -7,7 +7,7 @@
 Use double space for newline  
 
 # [Linux Bible](https://github.com/justtakingsomenotes/mynotes/blob/master/linuxbible.md)
-## B
+## [CSS notes](https://github.com/justtakingsomenotes/mynotes/blob/master/css_notes.md)
 ### C
 #### D
 ##### E
