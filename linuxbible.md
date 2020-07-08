@@ -1332,6 +1332,8 @@ echo "environment!"
 export FLASK_APP=flaskr  
 export FLASK_ENV=development  
 export FLASK_DEBUG=1  
+# note: the flask tutorial's "flask init-db" would reset the sqlite database  
+# each time you run this script
 echo "Set the environment variables for the Flask tutorial for you."  
 echo "I'm now starting the development server. Stop it with CTRL+C."  
 flask run  
