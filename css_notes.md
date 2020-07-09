@@ -1,3 +1,5 @@
+Chrome: refresh CSS and HTML = `CTRL+F5`  
+  
 /*  
 inline style > ID > classes, attributes, pseudo-classes > elements, pseudo-elements;  
 equal specificity: the latest rule in style.css will be applied;  
