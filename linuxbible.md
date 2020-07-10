@@ -1563,8 +1563,119 @@ scripts.
 `rmmod` also removes modules from the running kernel, however, you may have  
 to kill processes using the module first  
 
-## Installing Linux
+## Ch 9 Installing Linux
+
+Few news but...network installation and kickstart files.  
+  
+See also Ch 27 and 28 for virtual machines and cloud environments.  
+  
+Lightweight Linux options: Lubuntu, Tiny Core Linux, fedora LXDE spin  
+  
+PXE installation: Preboot eXecution Environment ("pixie") = boot from a  
+PXE-enabled Network Interface Card (NIC), provided a PXE boot server is on  
+the network. Most network cards support PXE.  
+  
+If in doubt go through `dmesg | less` using a live medium to check hardware.  
+  
+Remarks about cloud installations: hardware components are abstracted into a  
+pool of resources. To install Linux you would typically need not only the  
+Linux image but also a metadata from a configuration file or based on a form  
+you complete from a cloud controller.  
+  
+The boot loader points to a special kernel, called `anaconda`, and an inital  
+RAM disk. Boot options can be passed to the anaconda kernel to configure how  
+it starts up. One option to do this is to pass the location of a `kickstart`  
+file to the installer. Note: confusion alert with Python Anaconda.  
+  
+Additionally, `kickstart` scripts can add users, change permissions, create  
+files and directories, grab files over the network or anything a script allows  
+you to do.  
+  
+An install server could be reachable via `http`, `ftp` or `nfs`.  
+  
+Find instructions for the above in the documentation section of [redhat.com](https://access.redhat.com/documentation/en-us/)  
+  
+If you upgrade remove packages that you don't need. During an upgrade, lots  
+of checking  and compartin takes places. To save time, consider clean  
+installs after the upgrade.  
+  
+After an upgrade it may be worth to check configuration files as they might  
+not work anymore the way you expect.  
+  
+Backing up data + a fresh (mostly automated) installation might be preferable  
+compared to an upgrade.  
+  
+Note: Gentoo does continuous updates rather than having a formal upgrading  
+process.  
+  
+Avoid dual boot unless you use a separate hard disk, checks out with own  
+experience. If you have to, resize partitions with `gparted`. Defragment  
+Windows before you do steps resulting in a dual boot environment. Again,  
+avoid the hassle of dual boot. Windows has an `attrib` command to deal  
+with its hidden files.  
+
+### Using installation boot options
+
+While you boot, press `Tab` or another key to edit the anaconda kernel  
+command line. Look for `vmlinuz` and `initrd.img` where the former is the  
+compressed kernel and the latter the inital RAM disk.  
+  
+For example, if you have a kickstart file available from /root/ks.cfg on a CD,  
+your anaconda boot prompt to start the installation using the kickstart file  
+could look like the following:  
+`vmlinuz initrd=initrd.img ks=cdrom:/root/ks.cfg`  
+  
+see boot options tables on p. 211 for various options  
+  
+Add `askmethod` to the installation boot options to force the installer to  
+prompt you for the location of repositories (NFS, a URL, ...).  
+  
+VNC = virtual network computing = mirror screen of a remote machine while  
+transmitting own (keyboard and mouse) input to remote machine 
+You can use boot options for VNC installations:  
+`vnc` run installation as a VNC server
+`vncconnect=hostname[:port]` connect to VNC client hostname and optional port  
+`vncpassword=password` client uses password to connect to installer  
+  
+Using `repo=` options, you can identify software repository locations.  
+Examples:  
+`repo=hd:/dev/sda1:/myrepo`  
+`repo=ftp://ftp.example.com/myrepo`  
+`repo=http://repo.com/myrepo`  
+`repo=cdrom`  
+`repo=nfsiso::nfs.example.com:/mydir/rhel.iso`  
+  
+Identify repositories in a kickstart file, example:  
+`ks=http://asd.efg.com/ksfiles/ks.cfg`  
+  
+`rescue` instead of installing, run the kernel in rescue mode  
+  
+`mediacheck` check the installation media for checksum errors  
+
+### Using specialized storage
+
+You can use specialised storage for installation.
+  
+- Firmware RAID  
+- Multipath devices: look like a single device to the system  
+- Other SAN devices: Storage Area Network  
+
+Note on multipath devices: connections can be provided by iSCSI or Fibre Channel  
+over Ethernet (FCoE)  
+  
+iSCSI: has a target IP address and a certain type of discovery authentication  
+FCoE: which network interface is connected to your FCoE switch? Search that  
+interface for available FCoE devices  
+  
+### Partitioning hard drives
+
+You may want to assign `/home` and `/var` to a separate partition to prevent  
+logging to fail because the user filled up the disk space in `/home`.  
+  
+You may want to backup `home` in a separate partition for a faster restore.  
+  
+You may want to use different filesystems, thus you need different partitions.  
+
+#### Understanding different partition types
 
 continue here
-
-
