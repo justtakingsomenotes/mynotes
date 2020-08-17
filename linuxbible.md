@@ -1678,4 +1678,74 @@ You may want to use different filesystems, thus you need different partitions.
 
 #### Understanding different partition types
 
+Linux partitions: xfs and ext family  
+LVM: Logical Volume Manager, dynamic partition management  
+RAID: Redundant Array of Independent Disks  
+Swap: Virtual Memory  
+  
+There is `fdisk` for both, Linux and Windows, use common sense.  
+MBR (Master Boot Record) and GPT (GUID Partition Table) are limited when it  
+comes to the number of partitions. LVm solves these limitations.  
+  
+You may want to use different partitions to protect from:  
+- some kinds of DoS attacks which try to fill up your hard disk  
+- corrupted file systems, similar to the above  
+- crazy users
+  
+You may wish to assign seperate partitions to the following folders:  
+`/boot`  
+`/usr`  
+`/var` (servers!)  
+`/home`  
+`/tmp`  
+See Table 9.4 on p. 216 (10th edition) for detailed explanations, can  
+you deduce why you would use partitions for these folders, based on what  
+you know about Linux system folders, see p. 99 of 9th edition?  
+
+### Using the GRUB boot loader
+
+GRand Unified Bootloader (GRUB):  
+- GRUB Legacy
+- GRUB 2, nowadays the default  
+  
+Note: Syslinux is also a bootloader, commonly used for systems you can  
+boot live, see also `isolinux` (ISO 9660 CD) and `syslinux`.  
+  
+Add run level numbers to the end of the kernel line to boot there,  
+examples:  
+runlevel 1 = go there if you forgot your root password  
+runlevel 2 = multiuser mode  
+runlevel 3 = text mode, useful in case you broke your GUI  
+runlevel 5 = X GUI mode  
+  
+remove `rhgb quite` from the kernel line to see what's happening or just  
+press `Esc` during boot-up.  
+  
+GRUB 2 configurations file (very different from legacy GRUB):  
+`/boot/grub2/grub.cfg` or `/etc/grub2-efi.cfg`  
+  
+`grub.cfg` is created automatically from the contents of the  
+`/etc/default/grub` file and the `/etc/grub.d/` folder. Edit these instead  
+of `grub.cfg`.  
+
+`grub.cfg` can contain scripting syntax. Identify the location of kernels  
+and inital RAM disks with `UUIDs` (universally unique identifiers) as this  
+is more reliable and prevents problems when adding new disks.  
+  
+For fedora and RHEL systems, `*conf` files in the `/boot/loader/entries/`  
+directory are used to create entries that appear on the GRUB menu at boot  
+time. Just use an existing entry as a template or see p. 218 (10th edition).  
+  
+From example on p. 218 (10th edition):  
+`title` is self-explaining. The `linux` line identifies the location of the  
+kernel. `initrd` is for the location of the initial RAM disk.  
+  
+`info grub2` at the shell for more enlightment, including:  
+- booting different OS  
+- writing your own configuration files  
+- working with GRUB image files  
+- GRUB environment variables  
+
+## Ch 10 Getting and Managing Software
+
 continue here
