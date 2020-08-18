@@ -348,6 +348,7 @@ use `-- help` with the command
 use man pages with `man [command]`  
 use info pages with `info [command]` in case of `fg` there was much more info  
 via `info` than via `man`  
+
 #### Man pages deserve their own heading
 
 Check "VI and VIM" section. The search options there also apply to man pages  
@@ -1748,4 +1749,64 @@ kernel. `initrd` is for the location of the initial RAM disk.
 
 ## Ch 10 Getting and Managing Software
 
+No news re GUI software installation. All software packages necessary are  
+installed automatically.
+
+### Going Beyond the Software Window
+
+`yum` and `rpm` give more flexibility. Installing software often just means  
+to install multiple RPM packages. Using `rpm` you can validate software.  
+  
+The software window does not scale well. Other tools built on top of `rpm`  
+are made for that.
+
+### Understanding Linux RPM and DEB Software Packaging
+
+In the old days you would grab the source code, compile it into runnable  
+binaries, and drop it onto your computer. The form of the package could  
+be a `tarball` the files of which might be spread across your Linux  
+system in appropriate directories such as `/usr/share/man`, `/etc` or `lib`.  
+  
+Disadvantages of old days `tarball` installations:  
+- no dependency tracking, you would have to check that manually  
+- uncertainty about location and of documentation and configuration files  
+- removing the software and its files would have to be done manually  
+- `tarball` are not designed to hold metadata to support update processes  
+  
+That's why DEB and RPM were made.  
+DEB: `apt-get`, `apt`, `dpkg`  
+RPM: `rpm`, `yum`, `dnf`  
+
+Note: `snap` packages are meant to be cross-distribution but are maintained  
+developers themselves rather than distribution maintainers. RPM seems to be  
+more popular when enterprise-qulity software installation is required.  
+
+#### Understanding DEB packaging
+
+DEB packages hold multiple files and metadata related to some set of software  
+in the format of an `ar` archive file. `ar` started as a Unix tool.  
+  
+Metadata includes dependencies, licensing, package size, descriptions, etc.  
+  
+No news: Ubuntu Software Center, `aptitude`, `apt*` commands. Check `apt*`  
+command familiy' man pages: `man apt`  
+
+#### Understanding RPM packaging
+
+`rpm -q firefox` searches and displays the exact name of the firefox RPM  
+package which already reveals a lot of information, see pp. 226-227 (10th edition).  
+  
+`rpm -qi firefox` would give more detailed information.  
+  
+A Linux distribution takes the source code from the uptream software provider,  
+compiles it into binaries, includes documentation, configuration files, etc. and  
+gathers those components into the RPM. Then the RPM is signed and placed in a  
+repository.  
+
+`rpm` is bad at managing dependencies (dependency hell). DEB resolves package  
+dependencies automatically. `yum` was made to get out of RPM's dependency hell.  
+
+### Managing RPM Packages with YUM
+
 continue here
+  
