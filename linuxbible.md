@@ -1802,11 +1802,34 @@ A Linux distribution takes the source code from the uptream software provider,
 compiles it into binaries, includes documentation, configuration files, etc. and  
 gathers those components into the RPM. Then the RPM is signed and placed in a  
 repository.  
-
+  
 `rpm` is bad at managing dependencies (dependency hell). DEB resolves package  
 dependencies automatically. `yum` was made to get out of RPM's dependency hell.  
 
 ### Managing RPM Packages with YUM
 
-continue here
+YUM = YellowDow Updater Modified project  
   
+RPM = user had to manage dependencies  
+YUM = distributor has to manage dependencies  
+DNF = dandified YUM, has a strict API, API can be used for plug-ins or extensions  
+  
+In fedora and RHEL all `yum` commands are equivalent to the corresponding  
+`dnf` command (symbolic link).  
+  
+`yum/dnf [options] command`  
+  
+dnf configuration files: `/etc/dnf/dnf.conf`  
+see also yum configuration (usually linked): `/etc/yum.conf`  
+Interesting config values:  
+`gpgcheck=1` does what it says, risk of manipulation?  
+`installonly_limit=3` up to 3 versions of the same package, never less than 2  
+to make sure you always have at least 2 kernel versions  
+All the YUM config secrets: `man yum.conf`  
+  
+`.repo` files are what you expect and are located in `/etc/yum.repos.d/`, check  
+example on p. 243/231 (9th/10th edition)  
+
+#### Using YUM with third-party software repositories  
+
+continue here p. 232
