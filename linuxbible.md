@@ -1832,4 +1832,55 @@ example on p. 243/231 (9th/10th edition)
 
 #### Using YUM with third-party software repositories  
 
-continue here p. 232
+Those repositories have less open source characteristics and are less curated.  
+  
+A compromise is the RPM Fusion repository, install with root privileges:  
+`rpm -Uvh https://download1.rpmfusion.org/free/fedora/rpm-fusion-release-stable.noarch.rpm`  
+Change ...`free`... to `non-free` for non-free stuff such as certain codecs.  
+  
+Note: Configure `metadata_expire` in `/etc/yum.conf` to reduce intervall of  
+fresh metadata downloads.  
+  
+`yum search [potential word in package description]`  
+`yum info [package name]` detailed info on specific package  
+  
+If you know the name of the command, config file or lib name but you do not  
+know what package it is in: `yum provides [command you know]` This will tell  
+you the package that contains the command you are looking for.  
+  
+Don't forget, the following works with `dnf` instead of `yum` as well.  
+  
+`yum list [package]`  
+`yum list available`  
+`yum list installed`  
+`yum list all`  
+`yum deplist emacs | more` shows dependencies of emacs  
+`yum install emacs`  
+`yum reinstall emacs` the above would not help if you messed with files  
+`yum remove emacs`  
+`yum history info 12`  
+`yum history undo 12` VERY COOL  
+`yum check-update`  
+`yum update`  
+`yum update emacs`  
+`yum grouplist | less`  
+`yum groupinfo "Python Classroom"` note the quotes for the 2-word-group  
+`dnf groupinstall [groupname]`  remember: symbolically linked to `dnf`  
+`yum groupremove [groupname]`  
+  
+Remember `metadata-expire` comment above?  
+`yum clean packages` `yum clean metadata` `dnf clean all` the cleaning takes  
+place in the `/var/cache/yum` subdirectories  
+final reminder of the sympolic link `yum` --> `dnf`  
+  
+`yum check` check RPM database after, say, a power outage during installation  
+`rpm --rebuilddb` if the database was damaged, do `yum check` again then  
+  
+Download a package without installing, for examination: `yumdownloader firefox` or  
+`dnf download firefox`. Both download to the $PWD.  
+
+### Installing, Querying, and Veryfying Software with the rpm command
+
+After `dnf download [package]` you can inspect and check the package.  
+  
+continue here p. 241
