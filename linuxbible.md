@@ -548,7 +548,9 @@ where:
 `-` = `0`  
   
 Add those numbers to compose permissions, examples below.  
-
+  
+PERMISSION CONFLICT? (e.g. owner vs group)--> the most permissive `rwx`-set applies  
+  
 ### Changing permissions with chmod (numbers; always change all three bits)
 
 Example permissions of a directory: `drwxr-xr-x`, remember that `d` is a  
@@ -564,6 +566,10 @@ You can use `chmod` recursively to set the permissions for deeper levels of
 the folder structure (similar to ls -R): `chmod -R 755 $HOME/myapps`  
 The above would apply `755` permissions to the directory itself AND all  
 subdirectories.  
+  
+Plot twist on p. 276: it's actually 4 numbers and the above `chmod 777` is  
+actually `chmod 0777` where the first number is the `sticky bit`. See below  
+for more info in this way to enable collaborative work.  
   
 ### Changing permissions with chmod (letters; more precise, see below)
 
@@ -1883,4 +1889,177 @@ Download a package without installing, for examination: `yumdownloader firefox` 
 
 After `dnf download [package]` you can inspect and check the package.  
   
-continue here p. 241
+`yumdownloader zsh` download zsh package, just the package  
+  
+`rpm -i [some .rpm file, the entire package name]` install rpm package  `rpm -U` for upgrading  
+existing packages as the -i flag does not do anything if the package is already installed
+
+`rpm -F *.rpm` a so called freshen installs a package only if an existing, earlier version  
+of a package is present. Use it if you are in a directory with thousands of .rpm packages  
+but you only want to install those which are already installed on the system. Use  
+`--replacepkgs` to reinstall and `--oldpackage [old package name]` to install an older  
+version  
+  
+see `man rpm` and also check how to query stuff my using the `-q` and `-p` flags, e.g.:  
+`rpm -q --changelog httpd | less`  and see also `rpm --querytags | less`  
+  
+use `rpm -V` to check whether someone has tampered with the package post-installation.  
+Good practice: Back up `/var/lib/rpm/` to check against your original rpm database  
+  
+##Ch 11 Managing user accounts  
+  
+###Creating user accounts
+  
+Each user has an entry in `/etc/passwd`, each group has one in `/etc/group`  
+  
+CAREFUL: `useradd` and its friends `userdel` and `usermod` are lowlevel commands; in  
+contrast, `adduser` and its friends use the `user*`-family as backend and do the  
+distribution-conforming thing according to `/etc/adduser.conf` (in case of Debian/Ubuntu)  
+in terms of auto-creation of home folders and UID- and GUID-settings.
+  
+  
+`man useradd`  
+`useradd -c "comment here"`  
+`-d another_home_directory_than_defaulting_username`  
+`-e 2022-12-31` auto expiry of the account  
+`-f 14` number of days after password expiry until account is permanently disabled.  
+Disable this option with `-f -1`  
+  
+`-g wheel` place user in the wheel group which has to be present in `/etc/group`. If  
+this option is omitted a group with the same name as the user is created  
+`-G wheel,sales,tech` put new user in the three mentioned groups (wheel, sales and tech)  
+CAREFUL: `usermod -G [comma-separated groups here]` replaces the assigned groups, `usermod -aG`  
+appends the new groups to the existing ones  
+  
+Skeleton directories only work with the `-m flag`:  
+VERY COOL `useradd new_user_name -k /etc/skel -m` or combine with groups  
+`useradd username -g group_with_custom_skel -k /etc/custom_skel_for_group -m`  
+
+`-M` do not create a home folder even if the default is set to do so  
+  
+`useradd --non-unique --uid [existing user ID number]` this lets two users essentially have  
+control over the same set of files and directories  
+  
+Setting a password after user creation: `passwd [user]`  
+  
+check p. 264 for default behaviour and affected files and folders  
+  
+Example `/etc/passwd` entry: `sara:x:1002:1007:Sara Green:/home/sara/:/bin/tcsh` where all  
+info is colon `:`-separated and `x` would be the position of clear text password which is  
+in this case encrypted and stored in `/etc/shadow` instead. Generally:  
+
+`user:password:userID:primaryGroupID:comment field (name):home directory:assigned shell`  
+  
+Leaving out `useradd` options often means the use of default values.  
+  
+Example `/etc/group` entry: `sara:x:1007:` where the first field represents the group name  
+and the last field (after the `:`) would list the group members  
+    
+default values: `/etc/login.defs` and `/etc/default/useradd` containing key/value pairs  
+display defaults using `useradd -D`, change FIVE of them using flags p. 266  
+  
+`usermod -L some_user` lock account but leave the password intact. This puts an exclamation  
+mark in front of the corresponding entry in `/etc/shadow`. Use `-U` to unlock.  
+  
+`userdel -r some_user` the `-r` flag removes the user's home directory as well  
+  
+Ownership after user deletion: appears to be the previous user's user ID when `ls -l`  
+`find / -user some_user -ls` or `find / -uid 502 -ls` may be helpful to clean up  
+  
+Files without ownership are considered a security risk. Find them:  
+`find / -noname -ls`  
+  
+###Understanding group accounts
+  
+Every user is assigned to one primary group and zero or more supplementary groups  
+  
+Example of `/etc/group`:  
+`sales:x:1302:joe,bill,sally,sara`  
+`marketing:x:1303:mike,terry,sara`  
+  
+Only root can group.  
+  
+Temporarily change primary group in order to create a file accessible to that group's  
+members:  
+```
+touch file1  
+newgrp sales  
+touch file2  
+ls -l file*  
+[ls output with different groups]
+exit
+```
+
+The above results in `file1` being in the `sara` group and `file2` in the `sales` group  
+  
+group passwords (root only, looks like leading to security issues): `gpasswd sales`  
+after that, anybody can `newgr sales` and temporarily use `sales` as primary group  
+when prompted  
+  
+historic group number conventions: see p. 270  
+  
+`groupadd` and `groupmod` with `-g` and for name modification the `-n` flag  
+  
+see also: sticky bit, GID bit, Access Control Lists (ACLs) and the users being able  
+to assign permissions to any users and groups they like  
+  
+single machines with multiple users: `/etc/passwd` should do  
+otherwise: LDAP or active directory and the like may be more appropriate  
+  
+###Setting permissions with access control lists
+  
+ACLs must be enabled when the filesystem is mounted  
+  
+`setfacl` similar purpose as `chown`, `chgrp` and `chmod`. See also: `getfacl`  
+  
+if a user belongs to multiple groups, the most permissive set of permissions apply  
+  
+`setfacl`: modify `-m` or remove `-x`, e.g.: `setfacl -m u:some_user:rwx some_file` or  
+`setfacl -m g:some_group:rw /tmp/file.txt` The examples do what you would expect.  
+  
+`ls -l` may give you `-rw-rw-r--+ 1 mary mary 0 Jan 21 08:28 /tmp/file.txt` <-- note `+`  
+
+the `+` above indicates that ACLs have been set. You should check via `getfacl /tmp/file.txt`  
+  
+NOTE: the `mask` permission output of `getfacl` represents the effective permissions even if  
+the user is assigned more permissions via `setfacl`. The limit is always the max permission the  
+`setfacl`ed group or a user has.  
+  
+####setting default ACLs with d:  
+  
+```
+mkdir /tmp/some_user  
+setfacl -m d:g:sales:rwx /tmp/some_user #note the d:  
+getfacl /tmp/some_user
+[getfacle output shows the new defaults to be inherited to everything that happens in that folder]  
+```  
+  
+Check that inhertance works by creating a subdirectory and then `getfacl` it. Exception:  
+This applies only to directories as files are always `rw-` via `mask`  
+  
+The `acl` option can be added to the forth field in `/etc/fstab` (separate with comma if there is already  
+something in the 4th field). BETTER: use `tune2fs` to add ACLs in the Default options field of the  
+file systems super block in order to have ACLs available whether you `mount` manually or automatically.  
+  
+Check for ACL support, view the implanted mount options:  
+`mount | grep [limiting word such as "home" if filesystem is mounted there]` and  
+then `tune2fs -l [output of command before] | grep "mount options"`, see p. 275  
+  
+`tune2fs -o acl /dev/sdc1` adds ACL support to the `sdc1` device that you may have found using `fstab`.  
+Check that it worked: `tune2fs -l /dev/sdc1 | grep "mount options"`. Then REMOUNT! `mount -o remount /dev/sdc1`  
+You could also use `mount -a`, however this mounts all filesystems in `/etc/fstab` which you may not want  
+  
+Manual method to add ACL support while mounting: `mount -o acl /dev/sdc1 /var/stuff`. This is gone  
+after reboot unless you add an entry in `/etc/fstab`.  
+  
+####Sticky bit and GID bit basics
+  
+see permissions section `chmod 0777` above, see table on p. 276.  
+  
+replace zero with 1 (sticky bit), 2 (group ID bit) or 4 (user ID bit)  
+  
+This also works with letter permissions: `o+t`, `g+s` and `u+s`, respectively.  
+  
+####Creating group collaboration directories (set GID bit)
+  
+continue on p. 276
