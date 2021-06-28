@@ -2052,14 +2052,77 @@ You could also use `mount -a`, however this mounts all filesystems in `/etc/fsta
 Manual method to add ACL support while mounting: `mount -o acl /dev/sdc1 /var/stuff`. This is gone  
 after reboot unless you add an entry in `/etc/fstab`.  
   
-####Sticky bit and GID bit basics
+####Sticky bit UID and GID bit basics
   
 see permissions section `chmod 0777` above, see table on p. 276.  
   
-replace zero with 1 (sticky bit), 2 (group ID bit) or 4 (user ID bit)  
+replace zero with 1 (sticky bit), 2 (set group ID bit) or 4 (set user ID bit)  
   
-This also works with letter permissions: `o+t`, `g+s` and `u+s`, respectively.  
+This also works with letter permissions: `o+t`, `g+s` and `u+s`, respectively, see below for examples.  
   
+Check for the execute bits (see below).  
+    
 ####Creating group collaboration directories (set GID bit)
   
-continue on p. 276
+any file created in a `set GID bit` directory are assigned to the group which is assigned to that directory  
+  
+`groupadd -g 301 sales` create a group with the name sales and group ID 301  
+`usermod -aG sales some_user`, `mkdir /mnt/groupsalesdir`  
+  
+`chgrp sales `/mnt/groupsalesdir`  
+  
+`chmod 2775 /mnt/groupsalesdir` where `2` is the `set group ID bit` and the other three digits: see  
+above where permissions are discussed  
+  
+become `some_user` using `su - some_user`, then `touch /mnt/groupsalesdir/test.txt`, then check  
+permissions with `ls -ld` and note the `s` in `drwxrwsr-x` which indicates that the directory, indicated by  
+the leading `d`: the `s` means that the it's a set GID directory  
+  
+Normally, `test.txt` would be assigned to `some_user`'s group. But since `test.txt` was created in the group  
+ID folder, it is auto-assigned to the `sales` group` because of `chgrp` and `chmod 2775` above  
+  
+NOTE: Normally, a command runs with the permissions assigned to the user running the command.  
+NOTE: Commands with the set UID or set GID bits are run with the permission of the owner or group, respectively,  
+assigned to the command. A set UID command owned by `root` would run with root permissions, a set GID command  
+owned by apache would have apache group permissions. VERY COOL.  Examples: `su` or `newgrp`  
+  
+NOTE: Always check for an `s` in the permissions column after `ls -al` in the user or group triplet  
+  
+####Creating restricted deletion directories  
+  
+a restricted deletion directory is created by turning on the `sticky bit`, only owner or root can delete anything  
+  
+This even applies if a user is in the right group.  
+  
+The `t` in `drwxrwxrwt` would indicate the sticky that it is a restricted deletion directory: the sticky bit `t` is set  
+  
+`chmod 1777` would set the sticky bit: `1`, leading to a `t` in the permissions column of `other users`  
+  
+###Centralising user accounts  
+  
+Simple/standard way of authentication: check user information against `/etc/passwd` and `/etc/shadow`  
+  
+OR: use a central authentication server that (also fresh) Linux systems query in order to authenticate themselves  
+instead of having user added on the local machine. Some principle: user information and authentication method  
+  
+Check for `enterprise login` button in the Users window.  
+  
+More complex authentication configuration via `authconfig`  
+  
+LDAP: Lightweight Directory Access Protocol; open standard  
+NIS: Network information service; clear text, don't use  
+Winbind: use for authentications against Microsoft Active Directory  
+  
+LDAP general example:  
+LDAP Search Base DN `dc=example,dc=com`  
+LDAP Server `ldap://ldap.example.com`  
+TLS encryption: self-signed or certificate authorities  
+Authentication method: LDAP password or Kerberos  
+  
+see p. 280  
+  
+`getent passwd some_user` should result in output similar to an entry in `/etc/passwd`  
+  
+consider centralised `home` directories as well: `autofs` for auto-mounts, see also `NFS servers` 
+  
+continue p. 280
